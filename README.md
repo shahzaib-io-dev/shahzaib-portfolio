@@ -90,7 +90,7 @@ V2 is a planned direction, not a feature set already included in V1.
 - **Portfolio V1:** https://shahzaib-io-dev.github.io/shahzaib-portfolio/
 - **NEXUS AI:** https://shahzaib-io-dev.github.io/shahzaib-nexus/
 - **GitFinder:** https://shahzaib-io-dev.github.io/git-finder/
-- **GitHub profile:** https://github.com/shahzaib-io-dev
+- **GitHub profile:** https://github.com/shahzaib-io-dev/
 
 ## ◈ 07 — Connect
 
