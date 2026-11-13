@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Works Archive — Shahzaib</title>
+    
+    <link rel="icon" type="image/jpeg" href="images/logo.jpg">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="assets/css/style.css">
+
+    <style>
+        .page-header {
+            padding: 160px 0 60px; border-bottom: 1px solid var(--border);
+        }
+        .filter-bar {
+            display: flex; gap: 12px; margin-top: 2.5rem; flex-wrap: wrap;
+        }
+        .filter-btn {
+            background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-secondary); padding: 10px 22px; border-radius: 50px;
+            font-family: var(--font-mono); font-size: 0.82rem; font-weight: 500;
+            cursor: pointer; transition: all 0.3s var(--ease);
+        }
+        .filter-btn:hover, .filter-btn.active {
+            background: rgba(255, 46, 147, 0.15); border-color: var(--accent-pink);
+            color: #FFF; box-shadow: 0 0 20px rgba(255, 46, 147, 0.25);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="noise-overlay"></div>
+    <div class="ambient-glow" id="ambient-glow"></div>
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"><span class="cursor-text">VIEW</span></div>
+
+    <!-- GLOBAL NAVIGATION -->
+    <nav>
+        <a href="index.html" class="logo">
+            <img src="images/logo.jpg" alt="Shahzaib Logo">
+            <span class="nav-status"><span class="status-dot"></span> AVAILABLE</span>
+        </a>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="work.html" class="active">Projects (Archive)</a>
+            <a href="about.html">About & Stack</a>
+            <a href="contact.html">Contact</a>
+        </div>
+        <a href="contact.html" class="nav-btn" data-cursor="TALK">Let's Talk ↗</a>
+    </nav>
+
+    <!-- ARCHIVE HEADER -->
+    <header class="page-header container">
+        <div class="section-eyebrow">PORTFOLIO ARCHIVE</div>
+        <h1 class="section-title">Selected Works<br>& Systems.</h1>
+        <p style="color: var(--text-secondary); max-width: 620px; font-size: 1.15rem; margin-top: 1.2rem; line-height: 1.7;">
+            A curated record of production-grade software applications, interactive AI environments, and bespoke digital platforms engineered with precision.
+        </p>
+
+        <div class="filter-bar">
+            <button type="button" class="filter-btn active" data-filter="all">All Projects (07)</button>
+            <button type="button" class="filter-btn" data-filter="ai">AI Systems</button>
+            <button type="button" class="filter-btn" data-filter="fullstack">Full-Stack & SaaS</button>
+            <button type="button" class="filter-btn" data-filter="client">Web Applications</button>
+        </div>
+    </header>
+
+    <!-- ARCHIVE PROJECT LIST -->
+    <main class="container" style="padding-top: 60px; padding-bottom: 120px;">
+        <div class="projects-grid">
+            
+            <!-- 01 NOVAFORGE AI -->
+            <article class="project-card reveal" data-category="ai fullstack" data-cursor="VIEW LIVE">
+                <div class="project-info">
+                    <div>
+                        <div class="project-tag-row">
+                            <span class="project-num">/ 01</span>
+                            <span class="project-badge">Enterprise SaaS</span>
+                        </div>
+                        <h2 class="project-title">NOVAFORGE AI</h2>
+                        <p class="project-desc">A premium enterprise AI workspace for generating, operating, and improving digital products. Includes context-aware command centers, full-stack dev studios, and live preview containers.</p>
+                        <div class="project-tech">
+                            <span>Next.js 16</span>
+                            <span>React 19</span>
+                            <span>PostgreSQL</span>
+                            <span>Drizzle ORM</span>
+                            <span>AI Providers</span>
+                        </div>
+                    </div>
+                    <div class="project-actions">
+                        <a href="https://novaforge-ai-motion-upgraded.vercel.app/" target="_blank" rel="noreferrer" class="btn-project-cta" data-cursor="LAUNCH">Launch Workspace ↗</a>
+                    </div>
+                </div>
+                <div class="project-visual-half">
+                    <img src="images/project-novaforge.svg" alt="NOVAFORGE AI Preview" class="project-image">
+                    <div class="project-visual-overlay"></div>
+                    <span class="hover-reveal-tag">HOVER TO REVEAL ✦</span>
+                </div>
+            </article>
+
+            <!-- 02 CINEVAULT -->
+            <article class="project-card reveal" data-category="client" data-cursor="STREAM">
+                <div class="project-info">
+                    <div>
+                        <div class="project-tag-row">
+                            <span class="project-num">/ 02</span>
+                            <span class="project-badge cyan">Cinematic Discovery</span>
+                        </div>
+                        <h2 class="project-title">CINEVAULT</h2>
+                        <p class="project-desc">Ultra-immersive streaming cinema discovery engine. Interactive video trailers, dynamic backdrop transitions, curated movie archives, and silky-smooth glassmorphic controls.</p>
+                        <div class="project-tech">
+                            <span>Vanilla JS</span>
+                            <span>TMDB API</span>
+                            <span>Motion UI</span>
+                            <span>Glassmorphism</span>
+                        </div>
+                    </div>
+                    <div class="project-actions">
+                        <a href="https://shahzaib-io-dev.github.io/shahzaib-cinevault/" target="_blank" rel="noreferrer" class="btn-project-cta" data-cursor="EXPERIENCE">Experience CineVault ↗</a>
+                    </div>
+                </div>
+                <div class="project-visual-half">
+                    <img src="images/project-cinevault.svg" alt="CineVault Preview" class="project-image">
+                    <div class="project-visual-overlay"></div>
+                    <span class="hover-reveal-tag">HOVER TO REVEAL ✦</span>
+                </div>
+            </article>
+
+            <!-- 03 NEXUS AI -->
+            <article class="project-card reveal" data-category="ai" data-cursor="OPEN">
+                <div class="project-info">
+                    <div>
+                        <div class="project-tag-row">
+                            <span class="project-num">/ 03</span>
+                            <span class="project-badge">Browser AI App</span>
+                        </div>
+                        <h2 class="project-title">NEXUS AI</h2>
+                        <p class="project-desc">A fully functional, browser-native AI chat workspace with Bring Your Own Key (BYOK) architecture, offline fallback, and Web Speech voice recognition.</p>
+                        <div class="project-tech">
+                            <span>Vanilla JS</span>
+                            <span>OpenAI API</span>
+                            <span>Web Speech API</span>
+                            <span>Local Persistence</span>
+                        </div>
+                    </div>
+                    <div class="project-actions">
+                        <a href="https://shahzaib-io-dev.github.io/shahzaib-nexus/" target="_blank" rel="noreferrer" class="btn-project-cta" data-cursor="WORKSPACE">View Workspace ↗</a>
+                    </div>
+                </div>
+                <div class="project-visual-half">
+                    <img src="images/project-nexus.jpg" alt="Nexus AI Preview" class="project-image">
+                    <div class="project-visual-overlay"></div>
+                    <span class="hover-reveal-tag">HOVER TO REVEAL ✦</span>
+                </div>
+            </article>
+
+            <!-- 04 GitFinder -->
+            <article class="project-card reveal" data-category="client" data-cursor="SEARCH">
+                <div class="project-info">
+                    <div>
+                        <div class="project-tag-row">
+                            <span class="project-num">/ 04</span>
+                            <span class="project-badge cyan">PWA Tool</span>
+                        </div>
+                        <h2 class="project-title">GitFinder</h2>
+                        <p class="project-desc">A sleek, installable PWA to explore GitHub developers worldwide with real-time analytics, instant query caching, and dynamic language matrices.</p>
+                        <div class="project-tech">
+                            <span>Vanilla JS</span>
+                            <span>GitHub REST API</span>
+                            <span>Service Workers</span>
+                            <span>PWA</span>
+                        </div>
+                    </div>
+                    <div class="project-actions">
+                        <a href="https://shahzaib-io-dev.github.io/git-finder/" target="_blank" rel="noreferrer" class="btn-project-cta" data-cursor="OPEN PWA">Open GitFinder ↗</a>
+                    </div>
+                </div>
+                <div class="project-visual-half">
+                    <img src="images/project-gitfinder.jpg" alt="GitFinder Preview" class="project-image">
+                    <div class="project-visual-overlay"></div>
+                    <span class="hover-reveal-tag">HOVER TO REVEAL ✦</span>
+                </div>
+            </article>
+
+            <!-- 05 PCFORGE -->
+            <article class="project-card reveal" data-category="fullstack client" data-cursor="CONFIG">
+                <div class="project-info">
+                    <div>
+                        <div class="project-tag-row">
+                            <span class="project-num">/ 05</span>
+                            <span class="project-badge">Hardware Platform</span>
+                        </div>
+                        <h2 class="project-title">PCFORGE</h2>
+                        <p class="project-desc">An interactive custom PC hardware configurator that verifies real-time component compatibility, calculates wattage, and manages checkout.</p>
+                        <div class="project-tech">
+                            <span>Custom JS</span>
+                            <span>WooCommerce API</span>
+                            <span>State Engine</span>
+                        </div>
+                    </div>
+                    <div class="project-actions">
+                        <span class="btn-project-cta" style="opacity:0.85;">Hardware Configurator Concept ↗</span>
+                    </div>
+                </div>
+                <div class="project-visual-half">
+                    <img src="images/pcforge.jpg" alt="PCForge Preview" class="project-image">
+                    <div class="project-visual-overlay"></div>
+                    <span class="hover-reveal-tag">HOVER TO REVEAL ✦</span>
+                </div>
+            </article>
+
+            <!-- 06 SHAHSTAMOR -->
+            <article class="project-card reveal" data-category="client" data-cursor="DISCOVER">
+                <div class="project-info">
+                    <div>
+                        <div class="project-tag-row">
+                            <span class="project-num">/ 06</span>
+                            <span class="project-badge cyan">E-Commerce Concept</span>
+                        </div>
+                        <h2 class="project-title">SHAHSTAMOR</h2>
+                        <p class="project-desc">A premium mystery and thriller book-store concept. Features custom dark cinematic typography, interactive synopsis reading, and narrative product cards.</p>
+                        <div class="project-tech">
+                            <span>WordPress</span>
+                            <span>WooCommerce</span>
+                            <span>Custom CSS3</span>
+                        </div>
+                    </div>
+                    <div class="project-actions">
+                        <span class="btn-project-cta" style="opacity:0.85;">View Storefront ↗</span>
+                    </div>
+                </div>
+                <div class="project-visual-half">
+                    <img src="images/shahstamor.jpg" alt="Shahstamor Preview" class="project-image">
+                    <div class="project-visual-overlay"></div>
+                    <span class="hover-reveal-tag">HOVER TO REVEAL ✦</span>
+                </div>
+            </article>
+
+            <!-- 07 COURSECRAFT -->
+            <article class="project-card reveal" data-category="fullstack" data-cursor="LEARN">
+                <div class="project-info">
+                    <div>
+                        <div class="project-tag-row">
+                            <span class="project-num">/ 07</span>
+                            <span class="project-badge">LMS Platform</span>
+                        </div>
+                        <h2 class="project-title">COURSECRAFT</h2>
+                        <p class="project-desc">A cinematic Learning Management System focusing on an immersive student dashboard, curriculum progress tracking, and interactive video assignments.</p>
+                        <div class="project-tech">
+                            <span>Tutor LMS</span>
+                            <span>PHP</span>
+                            <span>Custom JavaScript</span>
+                        </div>
+                    </div>
+                    <div class="project-actions">
+                        <span class="btn-project-cta" style="opacity:0.85;">View LMS ↗</span>
+                    </div>
+                </div>
+                <div class="project-visual-half">
+                    <img src="images/lms.jpg" alt="CourseCraft Preview" class="project-image">
+                    <div class="project-visual-overlay"></div>
+                    <span class="hover-reveal-tag">HOVER TO REVEAL ✦</span>
+                </div>
+            </article>
+
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer id="contact">
+        <div class="footer-huge-wrap">
+            <a href="contact.html" class="footer-huge-text" data-cursor="MAIL">LET'S TALK</a>
+        </div>
+        <div class="footer-bottom">
+            <div>© 2026 SHAHZAIB · CRAFTED WITH OBSESSION</div>
+            <div class="footer-social">
+                <a href="https://github.com/shahzaib-io-dev" target="_blank" rel="noreferrer">GitHub ↗</a>
+                <a href="mailto:siyandeveloper@gmail.com">Email ↗</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="assets/js/main.js"></script>
+    <script>
+        // Interactive Filter Logic
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                const filter = btn.getAttribute('data-filter');
+                document.querySelectorAll('.project-card').forEach(card => {
+                    const cat = card.getAttribute('data-category') || '';
+                    if (filter === 'all' || cat.includes(filter)) {
+                        card.style.display = 'grid';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

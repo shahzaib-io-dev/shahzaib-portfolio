@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact — Shahzaib</title>
+    
+    <link rel="icon" type="image/jpeg" href="images/logo.jpg">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="assets/css/style.css">
+
+    <style>
+        .page-header {
+            padding: 160px 0 60px; border-bottom: 1px solid var(--border);
+        }
+        .contact-grid {
+            display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 4.5rem;
+            align-items: start; padding-top: 80px; padding-bottom: 120px;
+        }
+
+        /* Interactive Contact Card */
+        .contact-box {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 28px; padding: 3rem; backdrop-filter: blur(20px);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+        }
+        .form-group { margin-bottom: 1.8rem; }
+        .form-label {
+            display: block; font-family: var(--font-mono); font-size: 0.8rem;
+            color: var(--accent-pink); margin-bottom: 0.6rem; letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        .form-input, .form-textarea {
+            width: 100%; padding: 14px 18px; border-radius: 12px;
+            background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border);
+            color: #FFF; font-family: var(--font-body); font-size: 1rem;
+            transition: all 0.3s var(--ease); outline: none;
+        }
+        .form-input:focus, .form-textarea:focus {
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 25px rgba(0, 240, 255, 0.25);
+            background: rgba(255, 255, 255, 0.06);
+        }
+        .form-textarea { resize: vertical; min-height: 140px; }
+
+        .info-card {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 28px; padding: 2.8rem; backdrop-filter: blur(20px);
+            display: flex; flex-direction: column; gap: 2rem;
+        }
+        .info-item h4 {
+            font-family: var(--font-mono); font-size: 0.8rem; color: var(--accent-cyan);
+            text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 0.5rem;
+        }
+        .info-item p, .info-item a {
+            font-family: var(--font-heading); font-size: 1.35rem; color: #FFF;
+            font-weight: 700; transition: color 0.3s;
+        }
+        .info-item a:hover { color: var(--accent-pink); }
+        
+        .copy-pill {
+            display: inline-flex; align-items: center; gap: 8px; margin-top: 0.6rem;
+            padding: 6px 14px; border-radius: 50px; background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.12); font-family: var(--font-mono);
+            font-size: 0.75rem; color: var(--text-secondary); cursor: pointer; transition: all 0.2s;
+        }
+        .copy-pill:hover { background: rgba(255, 46, 147, 0.15); border-color: var(--accent-pink); color: #FFF; }
+
+        @media (max-width: 992px) {
+            .contact-grid { grid-template-columns: 1fr; gap: 3rem; }
+            .contact-box, .info-card { padding: 2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="noise-overlay"></div>
+    <div class="ambient-glow" id="ambient-glow"></div>
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"><span class="cursor-text">VIEW</span></div>
+
+    <!-- GLOBAL NAVIGATION -->
+    <nav>
+        <a href="index.html" class="logo">
+            <img src="images/logo.jpg" alt="Shahzaib Logo">
+            <span class="nav-status"><span class="status-dot"></span> AVAILABLE</span>
+        </a>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="work.html">Projects (Archive)</a>
+            <a href="about.html">About & Stack</a>
+            <a href="contact.html" class="active">Contact</a>
+        </div>
+        <a href="contact.html" class="nav-btn" data-cursor="TALK">Let's Talk ↗</a>
+    </nav>
+
+    <!-- HEADER -->
+    <header class="page-header container">
+        <div class="section-eyebrow">COMMISSION & ENQUIRIES</div>
+        <h1 class="section-title">Let's Build Something<br>Extraordinary.</h1>
+        <p style="color: var(--text-secondary); max-width: 620px; font-size: 1.15rem; margin-top: 1.2rem; line-height: 1.7;">
+            Have a project in mind, want to build an enterprise SaaS, or need a high-octane 3D experience? Send a direct transmission.
+        </p>
+    </header>
+
+    <!-- MAIN CONTACT INTERFACE -->
+    <main class="container">
+        <div class="contact-grid">
+            
+            <div class="contact-box">
+                <form action="mailto:siyandeveloper@gmail.com" method="GET" enctype="text/plain">
+                    <div class="form-group">
+                        <label class="form-label" for="c-name">// 01 YOUR NAME</label>
+                        <input type="text" id="c-name" name="subject" class="form-input" placeholder="e.g. Elon, Alex, Sarah" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="c-message">// 02 PROJECT TRANSMISSION</label>
+                        <textarea id="c-message" name="body" class="form-textarea" placeholder="Tell me about your product, timeline, and deliverables..." required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn-primary" style="width: 100%; justify-content: center;" data-cursor="SEND">
+                        Send Direct Transmission ↗
+                    </button>
+                </form>
+            </div>
+
+            <div class="info-card">
+                <div class="info-item">
+                    <h4>// DIRECT EMAIL</h4>
+                    <a href="mailto:siyandeveloper@gmail.com">siyandeveloper@gmail.com</a>
+                    <div>
+                        <button type="button" class="copy-pill" id="copy-btn">
+                            <span id="copy-text">📋 Copy email address</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <h4>// GITHUB REPOSITORIES</h4>
+                    <a href="https://github.com/shahzaib-io-dev" target="_blank" rel="noreferrer">github.com/shahzaib-io-dev ↗</a>
+                </div>
+
+                <div class="info-item">
+                    <h4>// RESPONSE LATENCY</h4>
+                    <p style="font-size: 1.15rem; font-family: var(--font-body); font-weight: 500; color: var(--text-secondary);">
+                        Within 24 hours · Available across all global timezones.
+                    </p>
+                </div>
+
+                <div class="info-item">
+                    <h4>// CURRENT ENGAGEMENT STATUS</h4>
+                    <div style="display: flex; align-items: center; gap: 8px; margin-top: 4px;">
+                        <span class="status-dot"></span>
+                        <span style="font-family: var(--font-mono); font-size: 0.9rem; color: #10B981; font-weight: 600;">Open for high-impact contracts & full-stack roles</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer id="contact">
+        <div class="footer-huge-wrap">
+            <a href="mailto:siyandeveloper@gmail.com" class="footer-huge-text" data-cursor="MAIL">LET'S TALK</a>
+        </div>
+        <div class="footer-bottom">
+            <div>© 2026 SHAHZAIB · CRAFTED WITH OBSESSION</div>
+            <div class="footer-social">
+                <a href="https://github.com/shahzaib-io-dev" target="_blank" rel="noreferrer">GitHub ↗</a>
+                <a href="mailto:siyandeveloper@gmail.com">Email ↗</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="assets/js/main.js"></script>
+    <script>
+        const copyBtn = document.getElementById('copy-btn');
+        const copyText = document.getElementById('copy-text');
+        if (copyBtn) {
+            copyBtn.addEventListener('click', () => {
+                navigator.clipboard.writeText('siyandeveloper@gmail.com').then(() => {
+                    copyText.textContent = '✔ Copied to clipboard!';
+                    setTimeout(() => { copyText.textContent = '📋 Copy email address'; }, 2500);
+                }).catch(() => {
+                    window.location.href = 'mailto:siyandeveloper@gmail.com';
+                });
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 750" width="1200" height="750">
+  <defs>
+    <linearGradient id="cbg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0b080f"/>
+      <stop offset="50%" stop-color="#180b18"/>
+      <stop offset="100%" stop-color="#07040a"/>
+    </linearGradient>
+    <linearGradient id="crimson" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#e11d48"/>
+      <stop offset="50%" stop-color="#f43f5e"/>
+      <stop offset="100%" stop-color="#fb7185"/>
+    </linearGradient>
+    <radialGradient id="cglow" cx="50%" cy="30%" r="55%">
+      <stop offset="0%" stop-color="rgba(225, 29, 72, 0.4)"/>
+      <stop offset="100%" stop-color="rgba(0,0,0,0)"/>
+    </radialGradient>
+  </defs>
+  <rect width="100%" height="100%" fill="url(#cbg)"/>
+  <circle cx="600" cy="300" r="420" fill="url(#cglow)"/>
+  
+  <!-- Cinema Layout Mockup -->
+  <g transform="translate(180, 100)">
+    <rect width="840" height="550" rx="20" fill="#0d0914" stroke="rgba(255,255,255,0.12)" stroke-width="2"/>
+    <!-- Top Nav -->
+    <rect width="840" height="60" rx="20" fill="#130d1d"/>
+    <text x="50" y="38" font-family="-apple-system, sans-serif" font-size="22" fill="#e11d48" font-weight="900" letter-spacing="1">CINEVAULT</text>
+    <text x="240" y="36" font-family="-apple-system, sans-serif" font-size="13" fill="#94a3b8">Movies</text>
+    <text x="310" y="36" font-family="-apple-system, sans-serif" font-size="13" fill="#94a3b8">Series</text>
+    <text x="380" y="36" font-family="-apple-system, sans-serif" font-size="13" fill="#94a3b8">Watchlist</text>
+    
+    <!-- Hero Banner with Trailer -->
+    <rect x="50" y="90" width="740" height="260" rx="14" fill="#1e1028" stroke="rgba(225,29,72,0.3)"/>
+    <text x="80" y="150" font-family="-apple-system, sans-serif" font-size="34" fill="#ffffff" font-weight="800">INTERSTELLAR DISCOVERY</text>
+    <text x="80" y="185" font-family="-apple-system, sans-serif" font-size="14" fill="#cbd5e1" max-width="450">Curated 4K Cinema Streams · High Dynamic Range · Spatial Audio</text>
+    <rect x="80" y="220" width="150" height="40" rx="8" fill="#e11d48"/>
+    <text x="155" y="245" font-family="-apple-system, sans-serif" font-size="14" fill="#ffffff" text-anchor="middle" font-weight="700">▶ Play Trailer</text>
+    
+    <!-- Movie Cards Row -->
+    <rect x="50" y="380" width="165" height="130" rx="10" fill="#191024" stroke="rgba(255,255,255,0.06)"/>
+    <rect x="240" y="380" width="165" height="130" rx="10" fill="#191024" stroke="rgba(255,255,255,0.06)"/>
+    <rect x="430" y="380" width="165" height="130" rx="10" fill="#191024" stroke="rgba(255,255,255,0.06)"/>
+    <rect x="620" y="380" width="170" height="130" rx="10" fill="#191024" stroke="rgba(255,255,255,0.06)"/>
+  </g>
+</svg>

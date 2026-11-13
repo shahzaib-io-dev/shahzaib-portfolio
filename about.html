@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About & Stack — Shahzaib</title>
+    
+    <link rel="icon" type="image/jpeg" href="images/logo.jpg">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="assets/css/style.css">
+
+    <style>
+        .page-header {
+            padding: 160px 0 60px; border-bottom: 1px solid var(--border);
+        }
+        .bio-section {
+            display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 5rem;
+            align-items: start; padding-top: 80px; padding-bottom: 80px;
+        }
+        .bio-text p {
+            font-size: 1.15rem; color: var(--text-secondary); line-height: 1.85; margin-bottom: 1.8rem;
+        }
+        .bio-text p strong { color: var(--text-primary); font-weight: 600; }
+        
+        .profile-side-card {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 28px; padding: 2.5rem; backdrop-filter: blur(20px);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.5); position: sticky; top: 110px;
+        }
+        .profile-side-card img {
+            width: 100%; height: 320px; object-fit: cover; border-radius: 18px;
+            margin-bottom: 1.5rem; border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .matrix-grid {
+            display: grid; grid-template-columns: repeat(2, 1fr); gap: 2rem; margin-top: 3rem;
+        }
+        .matrix-card {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 24px; padding: 2.5rem; backdrop-filter: blur(15px);
+            transition: all 0.4s var(--ease);
+        }
+        .matrix-card:hover {
+            border-color: var(--accent-pink); transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 25px rgba(255,46,147,0.15);
+        }
+        .matrix-card h3 {
+            font-family: var(--font-heading); font-size: 1.5rem; margin-bottom: 1.2rem;
+            display: flex; align-items: center; gap: 10px;
+        }
+        .matrix-pills { display: flex; flex-wrap: wrap; gap: 8px; }
+        .matrix-pills span {
+            background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 6px 16px; border-radius: 50px; font-family: var(--font-mono);
+            font-size: 0.82rem; color: var(--text-primary);
+        }
+
+        @media (max-width: 992px) {
+            .bio-section { grid-template-columns: 1fr; gap: 3rem; }
+            .matrix-grid { grid-template-columns: 1fr; }
+            .profile-side-card { position: relative; top: auto; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="noise-overlay"></div>
+    <div class="ambient-glow" id="ambient-glow"></div>
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"><span class="cursor-text">VIEW</span></div>
+
+    <!-- GLOBAL NAVIGATION -->
+    <nav>
+        <a href="index.html" class="logo">
+            <img src="images/logo.jpg" alt="Shahzaib Logo">
+            <span class="nav-status"><span class="status-dot"></span> AVAILABLE</span>
+        </a>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="work.html">Projects (Archive)</a>
+            <a href="about.html" class="active">About & Stack</a>
+            <a href="contact.html">Contact</a>
+        </div>
+        <a href="contact.html" class="nav-btn" data-cursor="TALK">Let's Talk ↗</a>
+    </nav>
+
+    <!-- HEADER -->
+    <header class="page-header container">
+        <div class="section-eyebrow">ENGINEERING PROFILE</div>
+        <h1 class="section-title">The Mind Behind<br>The Code.</h1>
+    </header>
+
+    <!-- BIO & DETAILS -->
+    <main class="container">
+        <section class="bio-section">
+            <div class="bio-text">
+                <div class="section-eyebrow">MANIFESTO</div>
+                <h2 style="font-family: var(--font-heading); font-size: 2.2rem; margin-bottom: 1.5rem; letter-spacing: -1px;">
+                    Bridging brutal engineering rigor with high-fashion aesthetic craft.
+                </h2>
+                <p>
+                    I'm <strong>Shahzaib</strong>. I don't believe in generic boilerplate websites. In a digital world saturated with clone-and-paste themes, my obsession is engineering bespoke digital experiences that seize human attention and deliver ruthless technical performance.
+                </p>
+                <p>
+                    Over years of building full-stack platforms, autonomous AI suites, and immersive 3D interfaces, I've developed a philosophy: <strong>software must feel tactile</strong>. It should react to user presence with fluid physics, load instantly without friction, and scale reliably under real production traffic.
+                </p>
+                <p>
+                    Whether architecting complex relational PostgreSQL schemas with Drizzle, orchestrating multi-provider AI context windows, or writing custom Three.js shaders for WebGL, I care deeply about the invisible details that separate good code from extraordinary digital products.
+                </p>
+                <div style="margin-top: 2.5rem; display: flex; gap: 1rem;">
+                    <a href="contact.html" class="btn-primary" data-cursor="TALK">Start a Project ↗</a>
+                    <a href="work.html" class="btn-ghost" data-cursor="WORK">Explore Portfolio ↓</a>
+                </div>
+            </div>
+
+            <div class="profile-side-card">
+                <img src="images/profile.jpg" alt="Shahzaib Portrait">
+                <h3 style="font-family: var(--font-heading); font-size: 1.5rem; color: #FFF; margin-bottom: 0.3rem;">Shahzaib</h3>
+                <p style="font-family: var(--font-mono); font-size: 0.85rem; color: var(--accent-cyan); margin-bottom: 1.5rem;">CREATIVE FULL-STACK ENGINEER</p>
+                <div style="display: flex; flex-direction: column; gap: 10px; font-family: var(--font-mono); font-size: 0.85rem; color: var(--text-secondary);">
+                    <div>📍 Location: Worldwide (Remote)</div>
+                    <div>🟢 Status: Available for Contracts</div>
+                    <div>⚡ Focus: Next.js 16, Three.js, AI & DBs</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TECHNICAL MASTERY MATRIX -->
+        <section style="border-top: 1px solid var(--border); padding-top: 80px; padding-bottom: 100px;">
+            <div class="section-eyebrow">STACK CAPABILITIES</div>
+            <h2 class="section-title">Technical Mastery Matrix.</h2>
+            
+            <div class="matrix-grid">
+                
+                <div class="matrix-card">
+                    <h3><span>⚡</span> Frontend & 3D Web</h3>
+                    <div class="matrix-pills">
+                        <span>React 19</span>
+                        <span>Next.js 16 (App Router)</span>
+                        <span>TypeScript</span>
+                        <span>Three.js / WebGL</span>
+                        <span>Tailwind CSS</span>
+                        <span>Framer Motion</span>
+                        <span>Vanilla HTML5/CSS3</span>
+                    </div>
+                </div>
+
+                <div class="matrix-card">
+                    <h3><span>🗄️</span> Backend & Databases</h3>
+                    <div class="matrix-pills">
+                        <span>PostgreSQL</span>
+                        <span>Drizzle ORM</span>
+                        <span>Node.js / Express</span>
+                        <span>Next.js Server Actions</span>
+                        <span>REST & GraphQL APIs</span>
+                        <span>OAuth 2.0 / Auth.js</span>
+                    </div>
+                </div>
+
+                <div class="matrix-card">
+                    <h3><span>🧠</span> AI & Autonomous Systems</h3>
+                    <div class="matrix-pills">
+                        <span>OpenAI API (GPT-4o)</span>
+                        <span>Anthropic Claude</span>
+                        <span>Google Gemini 2.0</span>
+                        <span>BYOK Architecture</span>
+                        <span>Structured Tool Outputs</span>
+                        <span>Context Management</span>
+                    </div>
+                </div>
+
+                <div class="matrix-card">
+                    <h3><span>🛠️</span> Infrastructure & Tooling</h3>
+                    <div class="matrix-pills">
+                        <span>Git & GitHub Workflows</span>
+                        <span>Vercel Edge & Turbopack</span>
+                        <span>Docker Containers</span>
+                        <span>PWA Architecture</span>
+                        <span>Linux & Bash</span>
+                        <span>CI / CD Automation</span>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer id="contact">
+        <div class="footer-huge-wrap">
+            <a href="contact.html" class="footer-huge-text" data-cursor="MAIL">LET'S TALK</a>
+        </div>
+        <div class="footer-bottom">
+            <div>© 2026 SHAHZAIB · CRAFTED WITH OBSESSION</div>
+            <div class="footer-social">
+                <a href="https://github.com/shahzaib-io-dev" target="_blank" rel="noreferrer">GitHub ↗</a>
+                <a href="mailto:siyandeveloper@gmail.com">Email ↗</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="assets/js/main.js"></script>
+</body>
+</html>
