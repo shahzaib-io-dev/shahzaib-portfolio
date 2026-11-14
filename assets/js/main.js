@@ -51,17 +51,21 @@
     });
 })();
 
-// 2. PHOTOREALISTIC 3D EARTH FROM SPACE & GLOBAL NETWORK
+// 2. PHOTOREALISTIC 3D EARTH FROM SPACE & GLOBAL LIVE NETWORK
+let hasInitializedGlobe = false;
+
 function initCyberGlobe() {
+    if (hasInitializedGlobe) return;
     const container = document.getElementById('three-canvas-container');
     if (!container || typeof THREE === 'undefined') return;
+    hasInitializedGlobe = true;
 
     container.innerHTML = '';
 
     // Scene & Camera setup
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-    camera.position.set(0, 0, 5.6);
+    camera.position.set(0, 0, 5.5);
 
     const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, powerPreference: 'high-performance' });
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -74,59 +78,65 @@ function initCyberGlobe() {
     globeRoot.rotation.z = 0.409; // 23.44 degrees tilt
     scene.add(globeRoot);
 
-    const GLOBE_RADIUS = 2.1;
+    const GLOBE_RADIUS = 2.15;
 
-    // Texture Loader
+    // Texture Loader with cache busting & crossOrigin
     const textureLoader = new THREE.TextureLoader();
-    const earthMap = textureLoader.load('images/earth_daymap.jpg');
-    const specularMap = textureLoader.load('images/earth_specular.jpg');
-    const cloudMap = textureLoader.load('images/earth_clouds.png');
+    textureLoader.setCrossOrigin('anonymous');
+
+    const earthMap = textureLoader.load('images/earth_daymap.jpg', () => { renderer.render(scene, camera); });
+    const specularMap = textureLoader.load('images/earth_specular.jpg', () => { renderer.render(scene, camera); });
+    const cloudMap = textureLoader.load('images/earth_clouds.png', () => { renderer.render(scene, camera); });
 
     // 1. Realistic Photorealistic Earth Sphere
     const earthGeom = new THREE.SphereGeometry(GLOBE_RADIUS, 64, 64);
-    const earthMat = new THREE.MeshPhongMaterial({
+    const earthMat = new THREE.MeshStandardMaterial({
         map: earthMap,
-        specularMap: specularMap,
-        specular: new THREE.Color(0x38bdf8),
-        shininess: 22,
-        emissive: new THREE.Color(0x060c18),
-        emissiveIntensity: 0.35
+        roughness: 0.65,
+        metalness: 0.15,
+        roughnessMap: specularMap
     });
     const earthMesh = new THREE.Mesh(earthGeom, earthMat);
     globeRoot.add(earthMesh);
 
-    // 2. Volumetric Cloud Layer (drifts slightly over Earth surface)
-    const cloudsGeom = new THREE.SphereGeometry(GLOBE_RADIUS * 1.018, 64, 64);
+    // 2. Volumetric Cloud Layer (drifts over Earth surface)
+    const cloudsGeom = new THREE.SphereGeometry(GLOBE_RADIUS * 1.016, 64, 64);
     const cloudsMat = new THREE.MeshStandardMaterial({
         map: cloudMap,
         transparent: true,
-        opacity: 0.88,
+        opacity: 0.85,
         blending: THREE.AdditiveBlending
     });
     const cloudsMesh = new THREE.Mesh(cloudsGeom, cloudsMat);
     globeRoot.add(cloudsMesh);
 
-    // 3. Realistic Atmospheric Fresnel Glow (Limb Aura seen in space photos)
-    const atmoGeom = new THREE.SphereGeometry(GLOBE_RADIUS * 1.14, 64, 64);
+    // 3. Cyan-Blue Atmospheric Fresnel Glow (Limb Aura seen in NASA space photos)
+    const atmoGeom = new THREE.SphereGeometry(GLOBE_RADIUS * 1.055, 64, 64);
     const atmoMat = new THREE.ShaderMaterial({
         vertexShader: `
             varying vec3 vNormal;
+            varying vec3 vPosition;
             void main() {
                 vNormal = normalize(normalMatrix * normal);
-                gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+                vPosition = (modelViewMatrix * vec4(position, 1.0)).xyz;
+                gl_Position = projectionMatrix * vec4(vPosition, 1.0);
             }
         `,
         fragmentShader: `
             varying vec3 vNormal;
+            varying vec3 vPosition;
             void main() {
-                float intensity = pow(0.64 - dot(vNormal, vec3(0.0, 0.0, 1.0)), 2.6);
-                vec3 glowColor = vec3(0.18, 0.72, 1.0); // Vibrant atmospheric cyan-blue
+                vec3 viewDir = normalize(-vPosition);
+                float dotNV = dot(vNormal, viewDir);
+                float rim = 1.0 - max(0.0, dotNV);
+                float intensity = pow(max(0.0, rim), 2.5);
+                vec3 glowColor = vec3(0.08, 0.78, 1.0); // Vibrant NASA atmospheric cyan-blue
                 gl_FragColor = vec4(glowColor, intensity * 0.95);
             }
         `,
         blending: THREE.AdditiveBlending,
-        side: THREE.BackSide,
-        transparent: true
+        transparent: true,
+        side: THREE.FrontSide
     });
     const atmoMesh = new THREE.Mesh(atmoGeom, atmoMat);
     globeRoot.add(atmoMesh);
@@ -228,7 +238,7 @@ function initCyberGlobe() {
         const arcMat = new THREE.LineBasicMaterial({
             color: index % 2 === 0 ? 0x00f0ff : 0xff2e93,
             transparent: true,
-            opacity: 0.6,
+            opacity: 0.65,
             linewidth: 1
         });
         const arcLine = new THREE.Line(arcGeom, arcMat);
@@ -251,10 +261,10 @@ function initCyberGlobe() {
     });
 
     // 6. Deep Space Starfield
-    const particleCount = 350;
+    const particleCount = 300;
     const posArray = new Float32Array(particleCount * 3);
     for (let i = 0; i < particleCount * 3; i += 3) {
-        const r = GLOBE_RADIUS * 1.45 + Math.random() * 2.2;
+        const r = GLOBE_RADIUS * 1.5 + Math.random() * 2.2;
         const theta = Math.random() * Math.PI * 2;
         const phi = Math.acos((Math.random() * 2) - 1);
         posArray[i] = r * Math.sin(phi) * Math.cos(theta);
@@ -272,19 +282,19 @@ function initCyberGlobe() {
     const starField = new THREE.Points(partGeom, partMat);
     scene.add(starField);
 
-    // 7. Realistic Sunlight & Planetary Lighting Setup
-    const ambientLight = new THREE.AmbientLight(0x0a1024, 1.2);
+    // 7. Daylight & Space Lighting (Full Earth Illumination)
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.95);
     scene.add(ambientLight);
 
-    // Sun directional light (illuminates Earth from top-right)
-    const sunLight = new THREE.DirectionalLight(0xffffff, 2.5);
-    sunLight.position.set(6, 4, 5);
+    // Sun directional light (illuminates Earth vividly from front-top-right)
+    const sunLight = new THREE.DirectionalLight(0xffffff, 1.8);
+    sunLight.position.set(3, 4, 6);
     scene.add(sunLight);
 
-    // Soft celestial rim back-light
-    const rimLight = new THREE.DirectionalLight(0x0ea5e9, 1.4);
-    rimLight.position.set(-6, -2, -4);
-    scene.add(rimLight);
+    // Soft celestial rim fill light
+    const fillLight = new THREE.DirectionalLight(0x38bdf8, 0.7);
+    fillLight.position.set(-4, -1, 4);
+    scene.add(fillLight);
 
     // 8. Interactive Mouse / Touch Drag & Parallax
     let mouseX = 0, mouseY = 0;
@@ -408,7 +418,10 @@ function initCyberGlobe() {
 }
 
 // 3. COLUMN-WISE PROJECT SHOWCASE CAROUSEL
+let hasInitializedCarousel = false;
+
 function initProjectCarousel() {
+    if (hasInitializedCarousel) return;
     const track = document.getElementById('projects-track');
     const prevBtn = document.getElementById('proj-prev');
     const nextBtn = document.getElementById('proj-next');
@@ -416,6 +429,7 @@ function initProjectCarousel() {
     const totalEl = document.getElementById('total-num');
     const dotsContainer = document.getElementById('carousel-dots');
     if (!track) return;
+    hasInitializedCarousel = true;
 
     const cards = track.querySelectorAll('.carousel-card');
     const totalCards = cards.length;
@@ -571,21 +585,14 @@ if (revealElements.length > 0) {
     revealElements.forEach(el => revealObserver.observe(el));
 }
 
-// 6. INITIALIZE MODULES ON DOM READY
-document.addEventListener('DOMContentLoaded', () => {
-    if (document.getElementById('three-canvas-container')) {
-        initCyberGlobe();
-    }
-    if (document.getElementById('projects-track')) {
-        initProjectCarousel();
-    }
-});
+// 6. SINGLE-PASS GUARANTEED INITIALIZATION
+function bootstrap() {
+    initCyberGlobe();
+    initProjectCarousel();
+}
 
-if (document.readyState === 'complete' || document.readyState === 'interactive') {
-    if (document.getElementById('three-canvas-container')) {
-        initCyberGlobe();
-    }
-    if (document.getElementById('projects-track')) {
-        initProjectCarousel();
-    }
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', bootstrap);
+} else {
+    bootstrap();
 }
