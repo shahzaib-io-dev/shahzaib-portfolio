@@ -25,6 +25,10 @@
             position: relative; min-height: 100vh;
             display: flex; align-items: center; justify-content: center;
             padding: 130px 0 70px; overflow: hidden;
+            cursor: grab;
+        }
+        #hero:active {
+            cursor: grabbing;
         }
         #three-canvas-container {
             position: absolute; inset: 0; z-index: 1; pointer-events: none;
@@ -269,128 +273,144 @@
         </div>
     </div>
 
-    <!-- FEATURED WORK SECTION WITH HOVER IMAGE REVEAL -->
+    <!-- FEATURED WORK SECTION — COLUMN-WISE INTERACTIVE CAROUSEL -->
     <section id="work" class="container">
-        <div class="section-header reveal">
-            <div class="section-eyebrow">SELECTED SHIPPED WORK</div>
-            <h2 class="section-title">Projects That Speak.</h2>
+        <div class="carousel-header-wrap reveal">
+            <div class="section-header-left">
+                <div class="section-eyebrow">SELECTED SHIPPED WORK</div>
+                <h2 class="section-title">Flagship Projects.</h2>
+            </div>
+            
+            <div class="carousel-controls">
+                <div class="carousel-counter">
+                    <span id="active-num">01</span>
+                    <span class="counter-slash">/</span>
+                    <span class="total-num" id="total-num">04</span>
+                </div>
+                <button id="proj-prev" class="carousel-nav-btn" data-cursor="PREV" aria-label="Previous Project" disabled>←</button>
+                <button id="proj-next" class="carousel-nav-btn" data-cursor="NEXT" aria-label="Next Project">→</button>
+            </div>
         </div>
 
-        <div class="projects-grid">
-            
-            <!-- Project 01: NOVAFORGE AI -->
-            <article class="project-card reveal" data-cursor="VIEW LIVE">
-                <div class="project-info">
-                    <div>
-                        <div class="project-tag-row">
-                            <span class="project-num">/ 01</span>
-                            <span class="project-badge">Live Enterprise SaaS</span>
+        <div class="projects-carousel-container reveal">
+            <div class="projects-carousel-track" id="projects-track">
+                
+                <!-- Project 01: NOVAFORGE AI -->
+                <article class="carousel-card" data-cursor="VIEW LIVE">
+                    <div class="carousel-card-visual">
+                        <img src="images/project-novaforge.svg" alt="NOVAFORGE AI Preview" class="project-image">
+                        <div class="project-visual-overlay"></div>
+                        <span class="hover-reveal-tag">HOVER TO REVEAL ✦</span>
+                    </div>
+                    <div class="carousel-card-body">
+                        <div>
+                            <div class="project-tag-row">
+                                <span class="project-num">/ 01</span>
+                                <span class="project-badge">Live Enterprise SaaS</span>
+                            </div>
+                            <h3 class="project-title">NOVAFORGE AI</h3>
+                            <p class="project-desc">A premium enterprise AI workspace for generating, operating, and improving digital products with context-aware command centers and dev studios.</p>
+                            <div class="project-tech">
+                                <span>Next.js 16</span>
+                                <span>React 19</span>
+                                <span>PostgreSQL</span>
+                                <span>Drizzle ORM</span>
+                            </div>
                         </div>
-                        <h3 class="project-title">NOVAFORGE AI</h3>
-                        <p class="project-desc">A premium enterprise AI workspace for generating, operating, and improving digital products. Includes context-aware command centers, full-stack dev studios, and live preview containers.</p>
-                        <div class="project-tech">
-                            <span>Next.js 16</span>
-                            <span>React 19</span>
-                            <span>PostgreSQL</span>
-                            <span>Drizzle ORM</span>
-                            <span>AI Providers</span>
+                        <div class="project-actions">
+                            <a href="https://novaforge-ai-motion-upgraded.vercel.app/" target="_blank" rel="noreferrer" class="btn-project-cta" data-cursor="LAUNCH">Launch Workspace ↗</a>
                         </div>
                     </div>
-                    <div class="project-actions">
-                        <a href="https://novaforge-ai-motion-upgraded.vercel.app/" target="_blank" rel="noreferrer" class="btn-project-cta" data-cursor="LAUNCH">Launch Workspace ↗</a>
-                    </div>
-                </div>
-                <div class="project-visual-half">
-                    <img src="images/project-novaforge.svg" alt="NOVAFORGE AI Preview" class="project-image">
-                    <div class="project-visual-overlay"></div>
-                    <span class="hover-reveal-tag">HOVER TO REVEAL ✦</span>
-                </div>
-            </article>
+                </article>
 
-            <!-- Project 02: CINEVAULT -->
-            <article class="project-card reveal" data-cursor="STREAM">
-                <div class="project-info">
-                    <div>
-                        <div class="project-tag-row">
-                            <span class="project-num">/ 02</span>
-                            <span class="project-badge cyan">Cinematic Discovery</span>
+                <!-- Project 02: CINEVAULT -->
+                <article class="carousel-card" data-cursor="STREAM">
+                    <div class="carousel-card-visual">
+                        <img src="images/project-cinevault.svg" alt="CineVault Preview" class="project-image">
+                        <div class="project-visual-overlay"></div>
+                        <span class="hover-reveal-tag">HOVER TO REVEAL ✦</span>
+                    </div>
+                    <div class="carousel-card-body">
+                        <div>
+                            <div class="project-tag-row">
+                                <span class="project-num">/ 02</span>
+                                <span class="project-badge cyan">Cinematic Discovery</span>
+                            </div>
+                            <h3 class="project-title">CINEVAULT</h3>
+                            <p class="project-desc">Ultra-immersive streaming cinema discovery engine. Interactive video trailers, dynamic backdrop transitions, curated archives, and silky glassmorphic controls.</p>
+                            <div class="project-tech">
+                                <span>Vanilla JS</span>
+                                <span>TMDB API</span>
+                                <span>Motion UI</span>
+                                <span>Glassmorphism</span>
+                            </div>
                         </div>
-                        <h3 class="project-title">CINEVAULT</h3>
-                        <p class="project-desc">Ultra-immersive streaming cinema discovery engine. Interactive video trailers, dynamic backdrop transitions, curated movie archives, and silky-smooth glassmorphic controls.</p>
-                        <div class="project-tech">
-                            <span>Vanilla JS</span>
-                            <span>TMDB API</span>
-                            <span>Motion UI</span>
-                            <span>Glassmorphism</span>
+                        <div class="project-actions">
+                            <a href="https://shahzaib-io-dev.github.io/shahzaib-cinevault/" target="_blank" rel="noreferrer" class="btn-project-cta" data-cursor="EXPERIENCE">Experience CineVault ↗</a>
                         </div>
                     </div>
-                    <div class="project-actions">
-                        <a href="https://shahzaib-io-dev.github.io/shahzaib-cinevault/" target="_blank" rel="noreferrer" class="btn-project-cta" data-cursor="EXPERIENCE">Experience CineVault ↗</a>
-                    </div>
-                </div>
-                <div class="project-visual-half">
-                    <img src="images/project-cinevault.svg" alt="CineVault Preview" class="project-image">
-                    <div class="project-visual-overlay"></div>
-                    <span class="hover-reveal-tag">HOVER TO REVEAL ✦</span>
-                </div>
-            </article>
+                </article>
 
-            <!-- Project 03: NEXUS AI -->
-            <article class="project-card reveal" data-cursor="OPEN">
-                <div class="project-info">
-                    <div>
-                        <div class="project-tag-row">
-                            <span class="project-num">/ 03</span>
-                            <span class="project-badge">Browser AI App</span>
+                <!-- Project 03: NEXUS AI -->
+                <article class="carousel-card" data-cursor="OPEN">
+                    <div class="carousel-card-visual">
+                        <img src="images/project-nexus.jpg" alt="Nexus AI Preview" class="project-image">
+                        <div class="project-visual-overlay"></div>
+                        <span class="hover-reveal-tag">HOVER TO REVEAL ✦</span>
+                    </div>
+                    <div class="carousel-card-body">
+                        <div>
+                            <div class="project-tag-row">
+                                <span class="project-num">/ 03</span>
+                                <span class="project-badge">Browser AI App</span>
+                            </div>
+                            <h3 class="project-title">NEXUS AI</h3>
+                            <p class="project-desc">A fully functional, browser-native AI chat workspace with Bring Your Own Key (BYOK) architecture, offline fallback, and Web Speech voice recognition.</p>
+                            <div class="project-tech">
+                                <span>Vanilla JS</span>
+                                <span>OpenAI API</span>
+                                <span>Web Speech API</span>
+                                <span>Local Persistence</span>
+                            </div>
                         </div>
-                        <h3 class="project-title">NEXUS AI</h3>
-                        <p class="project-desc">A fully functional, browser-native AI chat workspace with Bring Your Own Key (BYOK) architecture, offline fallback, and Web Speech voice recognition.</p>
-                        <div class="project-tech">
-                            <span>Vanilla JS</span>
-                            <span>OpenAI API</span>
-                            <span>Web Speech API</span>
-                            <span>Local Persistence</span>
+                        <div class="project-actions">
+                            <a href="https://shahzaib-io-dev.github.io/shahzaib-nexus/" target="_blank" rel="noreferrer" class="btn-project-cta" data-cursor="WORKSPACE">View Workspace ↗</a>
                         </div>
                     </div>
-                    <div class="project-actions">
-                        <a href="https://shahzaib-io-dev.github.io/shahzaib-nexus/" target="_blank" rel="noreferrer" class="btn-project-cta" data-cursor="WORKSPACE">View Workspace ↗</a>
-                    </div>
-                </div>
-                <div class="project-visual-half">
-                    <img src="images/project-nexus.jpg" alt="Nexus AI Preview" class="project-image">
-                    <div class="project-visual-overlay"></div>
-                    <span class="hover-reveal-tag">HOVER TO REVEAL ✦</span>
-                </div>
-            </article>
+                </article>
 
-            <!-- Project 04: GitFinder -->
-            <article class="project-card reveal" data-cursor="SEARCH">
-                <div class="project-info">
-                    <div>
-                        <div class="project-tag-row">
-                            <span class="project-num">/ 04</span>
-                            <span class="project-badge cyan">Progressive Web App</span>
+                <!-- Project 04: GitFinder -->
+                <article class="carousel-card" data-cursor="SEARCH">
+                    <div class="carousel-card-visual">
+                        <img src="images/project-gitfinder.jpg" alt="GitFinder Preview" class="project-image">
+                        <div class="project-visual-overlay"></div>
+                        <span class="hover-reveal-tag">HOVER TO REVEAL ✦</span>
+                    </div>
+                    <div class="carousel-card-body">
+                        <div>
+                            <div class="project-tag-row">
+                                <span class="project-num">/ 04</span>
+                                <span class="project-badge cyan">Progressive Web App</span>
+                            </div>
+                            <h3 class="project-title">GitFinder</h3>
+                            <p class="project-desc">A sleek, installable PWA to explore GitHub developers worldwide with real-time analytics, instant query caching, and dynamic language matrices.</p>
+                            <div class="project-tech">
+                                <span>Vanilla JS</span>
+                                <span>GitHub API</span>
+                                <span>Service Workers</span>
+                                <span>PWA</span>
+                            </div>
                         </div>
-                        <h3 class="project-title">GitFinder</h3>
-                        <p class="project-desc">A sleek, installable PWA to explore GitHub developers worldwide with real-time analytics, instant query caching, and dynamic language matrices.</p>
-                        <div class="project-tech">
-                            <span>Vanilla JS</span>
-                            <span>GitHub REST API</span>
-                            <span>Service Workers</span>
-                            <span>PWA</span>
+                        <div class="project-actions">
+                            <a href="https://shahzaib-io-dev.github.io/git-finder/" target="_blank" rel="noreferrer" class="btn-project-cta" data-cursor="OPEN PWA">Open GitFinder ↗</a>
                         </div>
                     </div>
-                    <div class="project-actions">
-                        <a href="https://shahzaib-io-dev.github.io/git-finder/" target="_blank" rel="noreferrer" class="btn-project-cta" data-cursor="OPEN PWA">Open GitFinder ↗</a>
-                    </div>
-                </div>
-                <div class="project-visual-half">
-                    <img src="images/project-gitfinder.jpg" alt="GitFinder Preview" class="project-image">
-                    <div class="project-visual-overlay"></div>
-                    <span class="hover-reveal-tag">HOVER TO REVEAL ✦</span>
-                </div>
-            </article>
+                </article>
 
+            </div>
+
+            <!-- Dots Indicator -->
+            <div class="carousel-dots" id="carousel-dots"></div>
         </div>
 
         <div class="archive-cta-banner reveal">
