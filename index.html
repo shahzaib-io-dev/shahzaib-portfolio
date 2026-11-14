@@ -28,7 +28,7 @@
         }
         #three-canvas-container {
             position: absolute; inset: 0; z-index: 1; pointer-events: none;
-            opacity: 0.85; mix-blend-mode: screen;
+            opacity: 0.9; mix-blend-mode: screen;
         }
         .hero-grid {
             display: grid; grid-template-columns: 1.25fr 0.75fr; gap: 3.5rem;
@@ -200,19 +200,19 @@
     <div class="cursor-dot"></div>
     <div class="cursor-outline"><span class="cursor-text">VIEW</span></div>
 
-    <!-- GLOBAL MULTI-PAGE NAVIGATION -->
+    <!-- GLOBAL MULTI-PAGE NAVIGATION (CLEAN URLS) -->
     <nav>
-        <a href="index.html" class="logo">
+        <a href="./" class="logo">
             <img src="images/logo.jpg" alt="Shahzaib Logo">
             <span class="nav-status"><span class="status-dot"></span> AVAILABLE</span>
         </a>
         <div class="nav-links">
-            <a href="index.html" class="active">Home</a>
-            <a href="work.html">Projects (Archive)</a>
-            <a href="about.html">About & Stack</a>
-            <a href="contact.html">Contact</a>
+            <a href="./" class="active">Home</a>
+            <a href="work/">Projects</a>
+            <a href="about/">About & Stack</a>
+            <a href="contact/">Contact</a>
         </div>
-        <a href="contact.html" class="nav-btn" data-cursor="TALK">Let's Talk ↗</a>
+        <a href="contact/" class="nav-btn" data-cursor="TALK">Let's Talk ↗</a>
     </nav>
 
     <!-- HERO SECTION WITH INTERACTIVE 3D WEBGL MESH -->
@@ -236,7 +236,7 @@
                 </p>
                 <div class="hero-actions">
                     <a href="#work" class="btn-primary" data-cursor="EXPLORE">Explore Work ↓</a>
-                    <a href="work.html" class="btn-ghost" data-cursor="ARCHIVE">View All Works (6+) ↗</a>
+                    <a href="work/" class="btn-ghost" data-cursor="ARCHIVE">View All Works (6+) ↗</a>
                 </div>
             </div>
             
@@ -394,7 +394,7 @@
         </div>
 
         <div class="archive-cta-banner reveal">
-            <a href="work.html" class="btn-view-archive" data-cursor="ALL WORK">
+            <a href="work/" class="btn-view-archive" data-cursor="ALL WORK">
                 View Full Project Archive (PCForge, LMS, Shahstamor & More) <span>→</span>
             </a>
         </div>
@@ -428,7 +428,7 @@
     <!-- KINETIC FOOTER -->
     <footer id="contact">
         <div class="footer-huge-wrap">
-            <a href="contact.html" class="footer-huge-text" data-cursor="MAIL">LET'S TALK</a>
+            <a href="contact/" class="footer-huge-text" data-cursor="MAIL">LET'S TALK</a>
         </div>
         <div class="footer-bottom">
             <div>© 2026 SHAHZAIB · CRAFTED WITH OBSESSION</div>
