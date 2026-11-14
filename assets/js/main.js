@@ -51,18 +51,17 @@
     });
 })();
 
-// 2. ULTRA-REALISTIC 3D CYBER EARTH GLOBE & GLOBAL NETWORK
+// 2. PHOTOREALISTIC 3D EARTH FROM SPACE & GLOBAL NETWORK
 function initCyberGlobe() {
     const container = document.getElementById('three-canvas-container');
     if (!container || typeof THREE === 'undefined') return;
 
-    // Clear previous if any
     container.innerHTML = '';
 
     // Scene & Camera setup
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-    camera.position.set(0, 0, 5.8);
+    camera.position.set(0, 0, 5.6);
 
     const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, powerPreference: 'high-performance' });
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -75,81 +74,40 @@ function initCyberGlobe() {
     globeRoot.rotation.z = 0.409; // 23.44 degrees tilt
     scene.add(globeRoot);
 
-    const GLOBE_RADIUS = 2.15;
+    const GLOBE_RADIUS = 2.1;
 
-    // Procedural Earth Texture Generator with fallback
-    function createCyberTexture() {
-        const canvas = document.createElement('canvas');
-        canvas.width = 2048;
-        canvas.height = 1024;
-        const ctx = canvas.getContext('2d');
+    // Texture Loader
+    const textureLoader = new THREE.TextureLoader();
+    const earthMap = textureLoader.load('images/earth_daymap.jpg');
+    const specularMap = textureLoader.load('images/earth_specular.jpg');
+    const cloudMap = textureLoader.load('images/earth_clouds.png');
 
-        // Dark deep space background
-        const grad = ctx.createRadialGradient(1024, 512, 100, 1024, 512, 1200);
-        grad.addColorStop(0, '#0a0d20');
-        grad.addColorStop(0.7, '#050713');
-        grad.addColorStop(1, '#020308');
-        ctx.fillStyle = grad;
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-        // Latitude & Longitude Coordinate Grid
-        ctx.strokeStyle = 'rgba(0, 240, 255, 0.12)';
-        ctx.lineWidth = 1;
-        // Parallels
-        for (let y = 0; y <= canvas.height; y += 64) {
-            ctx.beginPath();
-            ctx.moveTo(0, y);
-            ctx.lineTo(canvas.width, y);
-            ctx.stroke();
-        }
-        // Meridians
-        for (let x = 0; x <= canvas.width; x += 64) {
-            ctx.beginPath();
-            ctx.moveTo(x, 0);
-            ctx.lineTo(x, canvas.height);
-            ctx.stroke();
-        }
-
-        // Equator Highlight
-        ctx.strokeStyle = 'rgba(255, 46, 147, 0.45)';
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        ctx.moveTo(0, 512);
-        ctx.lineTo(canvas.width, 512);
-        ctx.stroke();
-
-        const texture = new THREE.CanvasTexture(canvas);
-        texture.wrapS = THREE.RepeatWrapping;
-        texture.wrapT = THREE.ClampToEdgeWrapping;
-
-        // Overlay detailed SVG vector landmass
-        const img = new Image();
-        img.crossOrigin = 'anonymous';
-        img.onload = () => {
-            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-            texture.needsUpdate = true;
-        };
-        img.src = 'images/earth-cyber-map.svg';
-
-        return texture;
-    }
-
-    const globeTexture = createCyberTexture();
-
-    // 1. Earth Base Sphere
-    const globeGeom = new THREE.SphereGeometry(GLOBE_RADIUS, 64, 64);
-    const globeMat = new THREE.MeshStandardMaterial({
-        map: globeTexture,
-        roughness: 0.35,
-        metalness: 0.65,
-        emissive: 0x071126,
-        emissiveIntensity: 0.5
+    // 1. Realistic Photorealistic Earth Sphere
+    const earthGeom = new THREE.SphereGeometry(GLOBE_RADIUS, 64, 64);
+    const earthMat = new THREE.MeshPhongMaterial({
+        map: earthMap,
+        specularMap: specularMap,
+        specular: new THREE.Color(0x38bdf8),
+        shininess: 22,
+        emissive: new THREE.Color(0x060c18),
+        emissiveIntensity: 0.35
     });
-    const globeMesh = new THREE.Mesh(globeGeom, globeMat);
-    globeRoot.add(globeMesh);
+    const earthMesh = new THREE.Mesh(earthGeom, earthMat);
+    globeRoot.add(earthMesh);
 
-    // 2. Atmospheric Fresnel Glow Shell
-    const atmoGeom = new THREE.SphereGeometry(GLOBE_RADIUS * 1.05, 48, 48);
+    // 2. Volumetric Cloud Layer (drifts slightly over Earth surface)
+    const cloudsGeom = new THREE.SphereGeometry(GLOBE_RADIUS * 1.018, 64, 64);
+    const cloudsMat = new THREE.MeshStandardMaterial({
+        map: cloudMap,
+        transparent: true,
+        opacity: 0.88,
+        blending: THREE.AdditiveBlending
+    });
+    const cloudsMesh = new THREE.Mesh(cloudsGeom, cloudsMat);
+    globeRoot.add(cloudsMesh);
+
+    // 3. Realistic Atmospheric Fresnel Glow (Limb Aura seen in space photos)
+    const atmoGeom = new THREE.SphereGeometry(GLOBE_RADIUS * 1.14, 64, 64);
     const atmoMat = new THREE.ShaderMaterial({
         vertexShader: `
             varying vec3 vNormal;
@@ -161,9 +119,9 @@ function initCyberGlobe() {
         fragmentShader: `
             varying vec3 vNormal;
             void main() {
-                float intensity = pow(0.65 - dot(vNormal, vec3(0.0, 0.0, 1.0)), 2.8);
-                vec3 glowColor = mix(vec3(0.0, 0.94, 1.0), vec3(1.0, 0.18, 0.58), vNormal.y * 0.5 + 0.5);
-                gl_FragColor = vec4(glowColor, intensity * 0.85);
+                float intensity = pow(0.64 - dot(vNormal, vec3(0.0, 0.0, 1.0)), 2.6);
+                vec3 glowColor = vec3(0.18, 0.72, 1.0); // Vibrant atmospheric cyan-blue
+                gl_FragColor = vec4(glowColor, intensity * 0.95);
             }
         `,
         blending: THREE.AdditiveBlending,
@@ -185,7 +143,7 @@ function initCyberGlobe() {
         );
     }
 
-    // 3. Global Network Tech Hubs (Coordinates)
+    // 4. Global Network Tech Hubs (Coordinates)
     const techHubs = [
         { name: 'Silicon Valley', lat: 37.77, lon: -122.41, color: 0x00f0ff },
         { name: 'New York', lat: 40.71, lon: -74.00, color: 0xff2e93 },
@@ -199,10 +157,10 @@ function initCyberGlobe() {
         { name: 'São Paulo', lat: -23.55, lon: -46.63, color: 0x00f0ff }
     ];
 
-    // Pulsating Radar Ring & Node Points
+    // Pulsating Radar Rings & Node Points
     const nodeRings = [];
     techHubs.forEach(hub => {
-        const pos = latLonToVector3(hub.lat, hub.lon, GLOBE_RADIUS, 0.02);
+        const pos = latLonToVector3(hub.lat, hub.lon, GLOBE_RADIUS, 0.025);
         
         // Node Core Dot
         const dotGeom = new THREE.SphereGeometry(0.038, 16, 16);
@@ -214,7 +172,7 @@ function initCyberGlobe() {
         // Vertical Marker Beam
         const beamNormal = pos.clone().normalize();
         const beamGeom = new THREE.CylinderGeometry(0.006, 0.006, 0.16, 8);
-        const beamMat = new THREE.MeshBasicMaterial({ color: hub.color, transparent: true, opacity: 0.8 });
+        const beamMat = new THREE.MeshBasicMaterial({ color: hub.color, transparent: true, opacity: 0.85 });
         const beamMesh = new THREE.Mesh(beamGeom, beamMat);
         beamMesh.position.copy(pos.clone().add(beamNormal.clone().multiplyScalar(0.08)));
         beamMesh.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), beamNormal);
@@ -226,17 +184,17 @@ function initCyberGlobe() {
             color: hub.color,
             side: THREE.DoubleSide,
             transparent: true,
-            opacity: 0.9
+            opacity: 0.95
         });
         const ringMesh = new THREE.Mesh(ringGeom, ringMat);
-        ringMesh.position.copy(pos.clone().add(beamNormal.clone().multiplyScalar(0.005)));
+        ringMesh.position.copy(pos.clone().add(beamNormal.clone().multiplyScalar(0.006)));
         ringMesh.lookAt(pos.clone().add(beamNormal));
         globeRoot.add(ringMesh);
 
-        nodeRings.push({ mesh: ringMesh, scale: 1, baseOpacity: 0.9 });
+        nodeRings.push({ mesh: ringMesh, scale: 1, baseOpacity: 0.95 });
     });
 
-    // 4. Inter-City Global Arcs & Traveling Photons
+    // 5. Inter-City Global Arcs & Traveling Photons
     const connections = [
         [0, 1], // Silicon Valley - New York
         [1, 2], // New York - London
@@ -254,10 +212,10 @@ function initCyberGlobe() {
     const travelingPulses = [];
 
     connections.forEach((conn, index) => {
-        const start = latLonToVector3(techHubs[conn[0]].lat, techHubs[conn[0]].lon, GLOBE_RADIUS);
-        const end = latLonToVector3(techHubs[conn[1]].lat, techHubs[conn[1]].lon, GLOBE_RADIUS);
+        const start = latLonToVector3(techHubs[conn[0]].lat, techHubs[conn[0]].lon, GLOBE_RADIUS, 0.025);
+        const end = latLonToVector3(techHubs[conn[1]].lat, techHubs[conn[1]].lon, GLOBE_RADIUS, 0.025);
 
-        // High arch midpoint elevated in space
+        // High arch midpoint elevated in space above clouds
         const distance = start.distanceTo(end);
         const mid = start.clone().add(end).multiplyScalar(0.5);
         const elevation = GLOBE_RADIUS + Math.min(distance * 0.38, 1.25);
@@ -270,14 +228,14 @@ function initCyberGlobe() {
         const arcMat = new THREE.LineBasicMaterial({
             color: index % 2 === 0 ? 0x00f0ff : 0xff2e93,
             transparent: true,
-            opacity: 0.55,
+            opacity: 0.6,
             linewidth: 1
         });
         const arcLine = new THREE.Line(arcGeom, arcMat);
         globeRoot.add(arcLine);
 
         // Data Pulse Photon
-        const pulseGeom = new THREE.SphereGeometry(0.035, 12, 12);
+        const pulseGeom = new THREE.SphereGeometry(0.038, 12, 12);
         const pulseMat = new THREE.MeshBasicMaterial({
             color: index % 2 === 0 ? 0xffffff : 0x00f0ff
         });
@@ -292,11 +250,11 @@ function initCyberGlobe() {
         });
     });
 
-    // 5. Ambient Orbital Particle Field
-    const particleCount = 280;
+    // 6. Deep Space Starfield
+    const particleCount = 350;
     const posArray = new Float32Array(particleCount * 3);
     for (let i = 0; i < particleCount * 3; i += 3) {
-        const r = GLOBE_RADIUS * 1.35 + Math.random() * 1.8;
+        const r = GLOBE_RADIUS * 1.45 + Math.random() * 2.2;
         const theta = Math.random() * Math.PI * 2;
         const phi = Math.acos((Math.random() * 2) - 1);
         posArray[i] = r * Math.sin(phi) * Math.cos(theta);
@@ -307,26 +265,28 @@ function initCyberGlobe() {
     partGeom.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
     const partMat = new THREE.PointsMaterial({
         size: 0.032,
-        color: 0x00f0ff,
+        color: 0x93c5fd,
         transparent: true,
-        opacity: 0.65
+        opacity: 0.75
     });
     const starField = new THREE.Points(partGeom, partMat);
     scene.add(starField);
 
-    // 6. Lighting Setup
-    const ambientLight = new THREE.AmbientLight(0x1a2138, 1.4);
+    // 7. Realistic Sunlight & Planetary Lighting Setup
+    const ambientLight = new THREE.AmbientLight(0x0a1024, 1.2);
     scene.add(ambientLight);
 
-    const dirLight1 = new THREE.DirectionalLight(0x00f0ff, 2.2);
-    dirLight1.position.set(5, 4, 6);
-    scene.add(dirLight1);
+    // Sun directional light (illuminates Earth from top-right)
+    const sunLight = new THREE.DirectionalLight(0xffffff, 2.5);
+    sunLight.position.set(6, 4, 5);
+    scene.add(sunLight);
 
-    const dirLight2 = new THREE.DirectionalLight(0xff2e93, 1.8);
-    dirLight2.position.set(-5, -3, -4);
-    scene.add(dirLight2);
+    // Soft celestial rim back-light
+    const rimLight = new THREE.DirectionalLight(0x0ea5e9, 1.4);
+    rimLight.position.set(-6, -2, -4);
+    scene.add(rimLight);
 
-    // 7. Interactive Mouse / Touch Drag & Parallax
+    // 8. Interactive Mouse / Touch Drag & Parallax
     let mouseX = 0, mouseY = 0;
     let targetRotX = 0, targetRotY = 0;
     let isDragging = false;
@@ -406,7 +366,7 @@ function initCyberGlobe() {
 
         // Natural continuous Earth rotation
         if (!isDragging) {
-            globeRoot.rotation.y += 0.0022;
+            globeRoot.rotation.y += 0.002;
             dragVelocityX *= 0.94;
             dragVelocityY *= 0.94;
             globeRoot.rotation.y += dragVelocityX;
@@ -417,6 +377,9 @@ function initCyberGlobe() {
             targetRotX = -mouseY * 0.18;
             globeRoot.rotation.y += (targetRotY - (globeRoot.rotation.y % (Math.PI * 2))) * 0.02;
         }
+
+        // Realistic clouds drift slightly faster over Earth
+        cloudsMesh.rotation.y += 0.0006;
 
         // Animate radar rings
         nodeRings.forEach(item => {
@@ -436,9 +399,8 @@ function initCyberGlobe() {
             item.mesh.position.copy(pos);
         });
 
-        // Ambient particles slow orbit
-        starField.rotation.y -= 0.0006;
-        starField.rotation.x -= 0.0003;
+        // Ambient stars slow orbit
+        starField.rotation.y -= 0.0004;
 
         renderer.render(scene, camera);
     }
@@ -477,7 +439,6 @@ function initProjectCarousel() {
 
     function getMaxIndex() {
         const isDesktop = window.innerWidth > 900;
-        // On desktop, 2 cards visible per view -> max index is totalCards - 2 (or totalCards - 1)
         return isDesktop ? Math.max(0, totalCards - 2) : totalCards - 1;
     }
 
@@ -487,7 +448,6 @@ function initProjectCarousel() {
         if (currentIndex > maxIdx) currentIndex = maxIdx;
         if (currentIndex < 0) currentIndex = 0;
 
-        // Slide percentage or pixel calculation
         if (isDesktop) {
             const cardWidth = cards[0].offsetWidth;
             const gap = 32; // 2rem
@@ -500,16 +460,13 @@ function initProjectCarousel() {
             track.style.transform = `translateX(-${offset}px)`;
         }
 
-        // Update counter
         if (counterEl) {
             counterEl.textContent = String(currentIndex + 1).padStart(2, '0');
         }
 
-        // Update buttons state
         if (prevBtn) prevBtn.disabled = currentIndex === 0;
         if (nextBtn) nextBtn.disabled = currentIndex >= maxIdx;
 
-        // Update dot indicators
         if (dotsContainer) {
             const dots = dotsContainer.querySelectorAll('.carousel-dot');
             dots.forEach((dot, i) => {
