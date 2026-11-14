@@ -23,7 +23,7 @@
         if (ambient) {
             ambient.style.transform = `translate(${e.clientX / 45}px, ${e.clientY / 45}px)`;
         }
-    });
+    }, { passive: true });
 
     function animateCursor() {
         outlineX += (mouseX - outlineX) * 0.16;
@@ -67,9 +67,14 @@ function initCyberGlobe() {
     const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
     camera.position.set(0, 0, 5.5);
 
-    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, powerPreference: 'high-performance' });
+    const renderer = new THREE.WebGLRenderer({
+        alpha: true,
+        antialias: true,
+        powerPreference: 'high-performance',
+        precision: 'mediump'
+    });
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.75));
     renderer.outputEncoding = THREE.sRGBEncoding;
     container.appendChild(renderer.domElement);
 
@@ -308,7 +313,7 @@ function initCyberGlobe() {
     window.addEventListener('mousemove', (e) => {
         mouseX = (e.clientX / window.innerWidth) * 2 - 1;
         mouseY = -(e.clientY / window.innerHeight) * 2 + 1;
-    });
+    }, { passive: true });
 
     if (heroEl) {
         heroEl.addEventListener('mousedown', (e) => {
@@ -367,11 +372,21 @@ function initCyberGlobe() {
         renderer.setSize(window.innerWidth, window.innerHeight);
     });
 
+    // High-Performance Visibility Pause (Zero GPU lag when scrolled past hero)
+    let isHeroVisible = true;
+    if ('IntersectionObserver' in window && heroEl) {
+        const heroObserver = new IntersectionObserver((entries) => {
+            isHeroVisible = entries[0].isIntersecting;
+        }, { threshold: 0.02 });
+        heroObserver.observe(heroEl);
+    }
+
     // Main 60 FPS Render Loop
     let clock = new THREE.Clock();
 
     function animate() {
         requestAnimationFrame(animate);
+        if (!isHeroVisible) return; // Instantly pauses WebGL loop when user scrolls down to projects!
         const delta = clock.getDelta();
 
         // Natural continuous Earth rotation
