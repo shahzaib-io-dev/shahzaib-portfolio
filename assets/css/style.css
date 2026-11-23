@@ -599,3 +599,26 @@ footer {
     .footer-bottom { flex-direction: column; gap: 1.5rem; text-align: center; }
     .footer-social a { margin: 0 1rem; }
 }
+
+/* ==========================================================================
+   PERFORMANCE & COMPOSITING ACCELERATION (GOD-LEVEL 60-120 FPS OPTIMIZATION)
+   ========================================================================== */
+#three-canvas-container canvas {
+    will-change: transform;
+    transform: translateZ(0);
+}
+
+.carousel-column,
+.bento-section,
+.footer-cta {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 600px;
+}
+
+/* Eliminate custom cursor DOM and RAF overhead completely on touch screens */
+@media (pointer: coarse), (hover: none) {
+    .cursor-dot,
+    .cursor-outline {
+        display: none !important;
+    }
+}

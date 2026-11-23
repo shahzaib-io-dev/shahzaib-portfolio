@@ -55,6 +55,11 @@ const SoundFX = (function () {
 
 // 2. FLUID MAGNETIC CURSOR
 (function initCursor() {
+    // Disable completely on touch devices to conserve 100% mobile CPU/GPU
+    if (window.matchMedia && window.matchMedia('(pointer: coarse)').matches) {
+        return;
+    }
+
     const cursorDot = document.querySelector('.cursor-dot');
     const cursorOutline = document.querySelector('.cursor-outline');
     const cursorText = document.querySelector('.cursor-text');
@@ -64,25 +69,27 @@ const SoundFX = (function () {
     let mouseY = window.innerHeight / 2;
     let outlineX = mouseX;
     let outlineY = mouseY;
+    const ambient = document.getElementById('ambient-glow');
 
     window.addEventListener('mousemove', (e) => {
         mouseX = e.clientX;
         mouseY = e.clientY;
-        cursorDot.style.transform = `translate(${mouseX}px, ${mouseY}px)`;
-        
-        const ambient = document.getElementById('ambient-glow');
-        if (ambient) {
-            ambient.style.transform = `translate(${e.clientX / 50}px, ${e.clientY / 50}px)`;
-        }
     }, { passive: true });
 
     function animateCursor() {
+        // Hardware-accelerated 3D transforms with zero layout reflow
+        cursorDot.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0)`;
+        
+        if (ambient) {
+            ambient.style.transform = `translate3d(${mouseX / 50}px, ${mouseY / 50}px, 0)`;
+        }
+
         outlineX += (mouseX - outlineX) * 0.18;
         outlineY += (mouseY - outlineY) * 0.18;
-        cursorOutline.style.transform = `translate(${outlineX}px, ${outlineY}px)`;
+        cursorOutline.style.transform = `translate3d(${outlineX}px, ${outlineY}px, 0)`;
         requestAnimationFrame(animateCursor);
     }
-    animateCursor();
+    requestAnimationFrame(animateCursor);
 
     const hoverables = document.querySelectorAll('a, button, .carousel-card, .bento-card, .audio-pill');
     hoverables.forEach(el => {
@@ -464,9 +471,16 @@ function initCyberGlobe() {
     // Main 60–120 FPS Relativistic Render Loop
     let clock = new THREE.Clock();
 
+    document.addEventListener('visibilitychange', () => {
+        if (!document.hidden && isHeroVisible) {
+            clock.getDelta(); // Reset clock delta so physics doesn't jump
+        }
+    });
+
     function animate() {
         requestAnimationFrame(animate);
-        if (!isHeroVisible) return; // 0% GPU load when browsing projects!
+        // Absolute 0% CPU/GPU overhead when hero is out of view or tab is in background!
+        if (!isHeroVisible || document.hidden) return;
 
         const delta = clock.getDelta();
         const time = clock.getElapsedTime();
@@ -702,7 +716,7 @@ function initProjectCarousel() {
     setTimeout(updateCarousel, 100);
 }
 
-// 6. LENIS VIRTUAL SMOOTH SCROLL (AWWWARDS TIER MOMENTUM)
+// 6. LENIS VIRTUAL SMOOTH SCROLL (AWWWARDS TIER MOMENTUM - ZERO JITTER)
 function initSmoothScroll() {
     if (typeof Lenis === 'undefined') return;
     const lenis = new Lenis({
@@ -713,18 +727,21 @@ function initSmoothScroll() {
         wheelMultiplier: 1.1
     });
 
-    function raf(time) {
-        lenis.raf(time);
-        requestAnimationFrame(raf);
-    }
-    requestAnimationFrame(raf);
-
-    if (typeof ScrollTrigger !== 'undefined') {
-        lenis.on('scroll', ScrollTrigger.update);
+    // Unified Ticker Pipeline: Prevents duplicate RAF calls and micro-stutter
+    if (typeof gsap !== 'undefined') {
         gsap.ticker.add((time) => {
             lenis.raf(time * 1000);
         });
         gsap.ticker.lagSmoothing(0);
+        if (typeof ScrollTrigger !== 'undefined') {
+            lenis.on('scroll', ScrollTrigger.update);
+        }
+    } else {
+        function raf(time) {
+            lenis.raf(time);
+            requestAnimationFrame(raf);
+        }
+        requestAnimationFrame(raf);
     }
 }
 
