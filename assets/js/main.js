@@ -1,8 +1,59 @@
-// ==========================================================
-// SHAHZAIB DIGITAL — FLAGSHIP CONTROLLER & 3D CYBERNETIC WEB
-// ==========================================================
+// ==========================================================================
+// SHAHZAIB DIGITAL — GOD-LEVEL 3D KINETIC ARCHITECTURE & AUDIO ENGINE
+// Theme: Midnight Sapphire & Platinum
+// ==========================================================================
 
-// 1. FLUID MAGNETIC CURSOR
+// 1. WEB AUDIO API SYNTHESIZER (ZERO ASSET OVERHEAD)
+const SoundFX = (function () {
+    let ctx = null;
+    let isMuted = true;
+
+    function getContext() {
+        if (!ctx && (window.AudioContext || window.webkitAudioContext)) {
+            ctx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if (ctx && ctx.state === 'suspended') {
+            ctx.resume();
+        }
+        return ctx;
+    }
+
+    function playTone(freq, type = 'sine', duration = 0.08, gainVal = 0.05) {
+        if (isMuted) return;
+        const c = getContext();
+        if (!c) return;
+        try {
+            const osc = c.createOscillator();
+            const gain = c.createGain();
+            osc.type = type;
+            osc.frequency.setValueAtTime(freq, c.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(freq * 0.5, c.currentTime + duration);
+
+            gain.gain.setValueAtTime(gainVal, c.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.0001, c.currentTime + duration);
+
+            osc.connect(gain);
+            gain.connect(c.destination);
+
+            osc.start();
+            osc.stop(c.currentTime + duration);
+        } catch (e) {}
+    }
+
+    return {
+        hover: () => playTone(880, 'sine', 0.06, 0.03),
+        click: () => playTone(440, 'triangle', 0.12, 0.06),
+        launch: () => playTone(660, 'sawtooth', 0.18, 0.05),
+        toggle: () => {
+            isMuted = !isMuted;
+            if (!isMuted) getContext();
+            return !isMuted;
+        },
+        getState: () => !isMuted
+    };
+})();
+
+// 2. FLUID MAGNETIC CURSOR
 (function initCursor() {
     const cursorDot = document.querySelector('.cursor-dot');
     const cursorOutline = document.querySelector('.cursor-outline');
@@ -21,37 +72,41 @@
         
         const ambient = document.getElementById('ambient-glow');
         if (ambient) {
-            ambient.style.transform = `translate(${e.clientX / 45}px, ${e.clientY / 45}px)`;
+            ambient.style.transform = `translate(${e.clientX / 50}px, ${e.clientY / 50}px)`;
         }
     }, { passive: true });
 
     function animateCursor() {
-        outlineX += (mouseX - outlineX) * 0.16;
-        outlineY += (mouseY - outlineY) * 0.16;
+        outlineX += (mouseX - outlineX) * 0.18;
+        outlineY += (mouseY - outlineY) * 0.18;
         cursorOutline.style.transform = `translate(${outlineX}px, ${outlineY}px)`;
         requestAnimationFrame(animateCursor);
     }
     animateCursor();
 
-    const hoverables = document.querySelectorAll('a, button, .carousel-card, .service-card, .interactive-item, .carousel-nav-btn');
+    const hoverables = document.querySelectorAll('a, button, .carousel-card, .bento-card, .audio-pill');
     hoverables.forEach(el => {
         el.addEventListener('mouseenter', () => {
-            const text = el.getAttribute('data-cursor') || 'VIEW';
+            const text = el.getAttribute('data-cursor') || 'EXPLORE';
             if (cursorText) cursorText.textContent = text;
             cursorOutline.classList.add('hovering');
+            SoundFX.hover();
         });
         el.addEventListener('mouseleave', () => {
             cursorOutline.classList.remove('hovering');
             setTimeout(() => {
                 if (!cursorOutline.classList.contains('hovering') && cursorText) {
-                    cursorText.textContent = 'VIEW';
+                    cursorText.textContent = 'EXPLORE';
                 }
             }, 180);
+        });
+        el.addEventListener('click', () => {
+            SoundFX.click();
         });
     });
 })();
 
-// 2. PHOTOREALISTIC 3D EARTH FROM SPACE & GLOBAL LIVE NETWORK
+// 3. THE 3D KINETIC QUANTUM CHRONO-CORE (THREE.JS)
 let hasInitializedGlobe = false;
 
 function initCyberGlobe() {
@@ -62,10 +117,10 @@ function initCyberGlobe() {
 
     container.innerHTML = '';
 
-    // Scene & Camera setup
+    // Scene & Perspective Camera
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-    camera.position.set(0, 0, 5.5);
+    camera.position.set(0, 0, 6.2);
 
     const renderer = new THREE.WebGLRenderer({
         alpha: true,
@@ -78,230 +133,132 @@ function initCyberGlobe() {
     renderer.outputEncoding = THREE.sRGBEncoding;
     container.appendChild(renderer.domElement);
 
-    // Master Group with Earth's 23.4° Axial Tilt
-    const globeRoot = new THREE.Group();
-    globeRoot.rotation.z = 0.409; // 23.44 degrees tilt
-    scene.add(globeRoot);
+    // Master Engine Group
+    const engineGroup = new THREE.Group();
+    scene.add(engineGroup);
 
-    const GLOBE_RADIUS = 2.15;
+    // Color definitions
+    const COLOR_SAPPHIRE = 0x3B82F6;
+    const COLOR_PLATINUM = 0xE2E8F0;
+    const COLOR_DEEP_BLUE = 0x1E3A8A;
+    const COLOR_CYAN = 0x06B6D4;
 
-    // Texture Loader with cache busting & crossOrigin
-    const textureLoader = new THREE.TextureLoader();
-    textureLoader.setCrossOrigin('anonymous');
-
-    const earthMap = textureLoader.load('images/earth_daymap.jpg', () => { renderer.render(scene, camera); });
-    const specularMap = textureLoader.load('images/earth_specular.jpg', () => { renderer.render(scene, camera); });
-    const cloudMap = textureLoader.load('images/earth_clouds.png', () => { renderer.render(scene, camera); });
-
-    // 1. Realistic Photorealistic Earth Sphere
-    const earthGeom = new THREE.SphereGeometry(GLOBE_RADIUS, 64, 64);
-    const earthMat = new THREE.MeshStandardMaterial({
-        map: earthMap,
-        roughness: 0.65,
-        metalness: 0.15,
-        roughnessMap: specularMap
+    // A. Outer Gimbal Ring (Titanium / Platinum)
+    const ring1Geom = new THREE.TorusGeometry(2.35, 0.038, 20, 100);
+    const ring1Mat = new THREE.MeshStandardMaterial({
+        color: COLOR_PLATINUM,
+        metalness: 0.92,
+        roughness: 0.18,
+        emissive: 0x1E293B,
+        emissiveIntensity: 0.25
     });
-    const earthMesh = new THREE.Mesh(earthGeom, earthMat);
-    globeRoot.add(earthMesh);
+    const ring1 = new THREE.Mesh(ring1Geom, ring1Mat);
+    engineGroup.add(ring1);
 
-    // 2. Volumetric Cloud Layer (drifts over Earth surface)
-    const cloudsGeom = new THREE.SphereGeometry(GLOBE_RADIUS * 1.016, 64, 64);
-    const cloudsMat = new THREE.MeshStandardMaterial({
-        map: cloudMap,
+    // B. Middle Orbital Ring (Royal Sapphire)
+    const ring2Geom = new THREE.TorusGeometry(1.92, 0.032, 20, 100);
+    const ring2Mat = new THREE.MeshStandardMaterial({
+        color: COLOR_SAPPHIRE,
+        metalness: 0.85,
+        roughness: 0.25,
+        emissive: COLOR_SAPPHIRE,
+        emissiveIntensity: 0.45
+    });
+    const ring2 = new THREE.Mesh(ring2Geom, ring2Mat);
+    ring2.rotation.x = Math.PI / 3;
+    engineGroup.add(ring2);
+
+    // C. Inner Gyroscopic Ring (Electric Cyan Accent)
+    const ring3Geom = new THREE.TorusGeometry(1.52, 0.026, 16, 90);
+    const ring3Mat = new THREE.MeshStandardMaterial({
+        color: COLOR_CYAN,
+        metalness: 0.8,
+        roughness: 0.3,
+        emissive: COLOR_CYAN,
+        emissiveIntensity: 0.35
+    });
+    const ring3 = new THREE.Mesh(ring3Geom, ring3Mat);
+    ring3.rotation.y = Math.PI / 4;
+    engineGroup.add(ring3);
+
+    // D. Central Holographic Crystalline Core
+    const coreGeom = new THREE.IcosahedronGeometry(0.95, 1);
+    const coreMat = new THREE.MeshStandardMaterial({
+        color: COLOR_PLATINUM,
+        wireframe: true,
         transparent: true,
-        opacity: 0.85,
-        blending: THREE.AdditiveBlending
+        opacity: 0.45,
+        emissive: COLOR_SAPPHIRE,
+        emissiveIntensity: 0.5
     });
-    const cloudsMesh = new THREE.Mesh(cloudsGeom, cloudsMat);
-    globeRoot.add(cloudsMesh);
+    const coreMesh = new THREE.Mesh(coreGeom, coreMat);
+    engineGroup.add(coreMesh);
 
-    // 3. Cyan-Blue Atmospheric Fresnel Glow (Limb Aura seen in NASA space photos)
-    const atmoGeom = new THREE.SphereGeometry(GLOBE_RADIUS * 1.055, 64, 64);
-    const atmoMat = new THREE.ShaderMaterial({
-        vertexShader: `
-            varying vec3 vNormal;
-            varying vec3 vPosition;
-            void main() {
-                vNormal = normalize(normalMatrix * normal);
-                vPosition = (modelViewMatrix * vec4(position, 1.0)).xyz;
-                gl_Position = projectionMatrix * vec4(vPosition, 1.0);
-            }
-        `,
-        fragmentShader: `
-            varying vec3 vNormal;
-            varying vec3 vPosition;
-            void main() {
-                vec3 viewDir = normalize(-vPosition);
-                float dotNV = dot(vNormal, viewDir);
-                float rim = 1.0 - max(0.0, dotNV);
-                float intensity = pow(max(0.0, rim), 2.5);
-                vec3 glowColor = vec3(0.08, 0.78, 1.0); // Vibrant NASA atmospheric cyan-blue
-                gl_FragColor = vec4(glowColor, intensity * 0.95);
-            }
-        `,
-        blending: THREE.AdditiveBlending,
+    // E. Quantum Singularity Core (Inner glowing sphere)
+    const innerGeom = new THREE.SphereGeometry(0.55, 32, 32);
+    const innerMat = new THREE.MeshBasicMaterial({
+        color: COLOR_SAPPHIRE,
+        wireframe: false,
         transparent: true,
-        side: THREE.FrontSide
+        opacity: 0.75
     });
-    const atmoMesh = new THREE.Mesh(atmoGeom, atmoMat);
-    globeRoot.add(atmoMesh);
+    const innerCore = new THREE.Mesh(innerGeom, innerMat);
+    engineGroup.add(innerCore);
 
-    // Convert Lat/Lon to 3D Cartesian coordinates on sphere
-    function latLonToVector3(lat, lon, radius, alt = 0) {
-        const phi = (90 - lat) * (Math.PI / 180);
-        const theta = (lon + 180) * (Math.PI / 180);
-        const r = radius + alt;
-        return new THREE.Vector3(
-            -(r * Math.sin(phi) * Math.cos(theta)),
-            r * Math.cos(phi),
-            r * Math.sin(phi) * Math.sin(theta)
-        );
+    // F. Pulsating Plasma Beacons on Rings
+    const beaconCount = 6;
+    const beacons = [];
+    for (let i = 0; i < beaconCount; i++) {
+        const bGeom = new THREE.SphereGeometry(0.045, 12, 12);
+        const bMat = new THREE.MeshBasicMaterial({ color: i % 2 === 0 ? COLOR_PLATINUM : COLOR_CYAN });
+        const bMesh = new THREE.Mesh(bGeom, bMat);
+        const angle = (i / beaconCount) * Math.PI * 2;
+        bMesh.position.set(Math.cos(angle) * 2.35, Math.sin(angle) * 2.35, 0);
+        ring1.add(bMesh);
+        beacons.push(bMesh);
     }
 
-    // 4. Global Network Tech Hubs (Coordinates)
-    const techHubs = [
-        { name: 'Silicon Valley', lat: 37.77, lon: -122.41, color: 0x00f0ff },
-        { name: 'New York', lat: 40.71, lon: -74.00, color: 0xff2e93 },
-        { name: 'London', lat: 51.50, lon: -0.12, color: 0x00f0ff },
-        { name: 'Frankfurt', lat: 50.11, lon: 8.68, color: 0x00f0ff },
-        { name: 'Dubai', lat: 25.20, lon: 55.27, color: 0xff2e93 },
-        { name: 'Karachi', lat: 24.86, lon: 67.00, color: 0x00f0ff },
-        { name: 'Singapore', lat: 1.35, lon: 103.81, color: 0x00f0ff },
-        { name: 'Tokyo', lat: 35.67, lon: 139.65, color: 0xff2e93 },
-        { name: 'Sydney', lat: -33.86, lon: 151.20, color: 0x00f0ff },
-        { name: 'São Paulo', lat: -23.55, lon: -46.63, color: 0x00f0ff }
-    ];
-
-    // Pulsating Radar Rings & Node Points
-    const nodeRings = [];
-    techHubs.forEach(hub => {
-        const pos = latLonToVector3(hub.lat, hub.lon, GLOBE_RADIUS, 0.025);
-        
-        // Node Core Dot
-        const dotGeom = new THREE.SphereGeometry(0.038, 16, 16);
-        const dotMat = new THREE.MeshBasicMaterial({ color: hub.color });
-        const dotMesh = new THREE.Mesh(dotGeom, dotMat);
-        dotMesh.position.copy(pos);
-        globeRoot.add(dotMesh);
-
-        // Vertical Marker Beam
-        const beamNormal = pos.clone().normalize();
-        const beamGeom = new THREE.CylinderGeometry(0.006, 0.006, 0.16, 8);
-        const beamMat = new THREE.MeshBasicMaterial({ color: hub.color, transparent: true, opacity: 0.85 });
-        const beamMesh = new THREE.Mesh(beamGeom, beamMat);
-        beamMesh.position.copy(pos.clone().add(beamNormal.clone().multiplyScalar(0.08)));
-        beamMesh.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), beamNormal);
-        globeRoot.add(beamMesh);
-
-        // Expanding Radar Ring
-        const ringGeom = new THREE.RingGeometry(0.04, 0.065, 32);
-        const ringMat = new THREE.MeshBasicMaterial({
-            color: hub.color,
-            side: THREE.DoubleSide,
-            transparent: true,
-            opacity: 0.95
-        });
-        const ringMesh = new THREE.Mesh(ringGeom, ringMat);
-        ringMesh.position.copy(pos.clone().add(beamNormal.clone().multiplyScalar(0.006)));
-        ringMesh.lookAt(pos.clone().add(beamNormal));
-        globeRoot.add(ringMesh);
-
-        nodeRings.push({ mesh: ringMesh, scale: 1, baseOpacity: 0.95 });
-    });
-
-    // 5. Inter-City Global Arcs & Traveling Photons
-    const connections = [
-        [0, 1], // Silicon Valley - New York
-        [1, 2], // New York - London
-        [2, 3], // London - Frankfurt
-        [3, 4], // Frankfurt - Dubai
-        [4, 5], // Dubai - Karachi
-        [5, 6], // Karachi - Singapore
-        [6, 7], // Singapore - Tokyo
-        [7, 0], // Tokyo - Silicon Valley (Trans-Pacific Arc)
-        [7, 8], // Tokyo - Sydney
-        [2, 9], // London - São Paulo
-        [9, 1]  // São Paulo - New York
-    ];
-
-    const travelingPulses = [];
-
-    connections.forEach((conn, index) => {
-        const start = latLonToVector3(techHubs[conn[0]].lat, techHubs[conn[0]].lon, GLOBE_RADIUS, 0.025);
-        const end = latLonToVector3(techHubs[conn[1]].lat, techHubs[conn[1]].lon, GLOBE_RADIUS, 0.025);
-
-        // High arch midpoint elevated in space above clouds
-        const distance = start.distanceTo(end);
-        const mid = start.clone().add(end).multiplyScalar(0.5);
-        const elevation = GLOBE_RADIUS + Math.min(distance * 0.38, 1.25);
-        mid.normalize().multiplyScalar(elevation);
-
-        const curve = new THREE.QuadraticBezierCurve3(start, mid, end);
-        const points = curve.getPoints(50);
-        const arcGeom = new THREE.BufferGeometry().setFromPoints(points);
-
-        const arcMat = new THREE.LineBasicMaterial({
-            color: index % 2 === 0 ? 0x00f0ff : 0xff2e93,
-            transparent: true,
-            opacity: 0.65,
-            linewidth: 1
-        });
-        const arcLine = new THREE.Line(arcGeom, arcMat);
-        globeRoot.add(arcLine);
-
-        // Data Pulse Photon
-        const pulseGeom = new THREE.SphereGeometry(0.038, 12, 12);
-        const pulseMat = new THREE.MeshBasicMaterial({
-            color: index % 2 === 0 ? 0xffffff : 0x00f0ff
-        });
-        const pulseMesh = new THREE.Mesh(pulseGeom, pulseMat);
-        globeRoot.add(pulseMesh);
-
-        travelingPulses.push({
-            curve: curve,
-            mesh: pulseMesh,
-            progress: (index * 0.12) % 1,
-            speed: 0.003 + Math.random() * 0.002
-        });
-    });
-
-    // 6. Deep Space Starfield
-    const particleCount = 300;
+    // G. Swirling Singularity Particle Torus (350 micro-photons)
+    const particleCount = 350;
     const posArray = new Float32Array(particleCount * 3);
     for (let i = 0; i < particleCount * 3; i += 3) {
-        const r = GLOBE_RADIUS * 1.5 + Math.random() * 2.2;
-        const theta = Math.random() * Math.PI * 2;
-        const phi = Math.acos((Math.random() * 2) - 1);
-        posArray[i] = r * Math.sin(phi) * Math.cos(theta);
-        posArray[i + 1] = r * Math.sin(phi) * Math.sin(theta);
-        posArray[i + 2] = r * Math.cos(phi);
+        const u = Math.random() * Math.PI * 2;
+        const v = Math.random() * Math.PI * 2;
+        const R = 2.4 + Math.random() * 0.8;
+        const r = 0.35 + Math.random() * 0.4;
+        posArray[i] = (R + r * Math.cos(v)) * Math.cos(u);
+        posArray[i + 1] = (R + r * Math.cos(v)) * Math.sin(u);
+        posArray[i + 2] = r * Math.sin(v) + (Math.random() - 0.5) * 1.5;
     }
     const partGeom = new THREE.BufferGeometry();
     partGeom.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
     const partMat = new THREE.PointsMaterial({
-        size: 0.032,
-        color: 0x93c5fd,
+        size: 0.035,
+        color: COLOR_PLATINUM,
         transparent: true,
-        opacity: 0.75
+        opacity: 0.75,
+        blending: THREE.AdditiveBlending
     });
-    const starField = new THREE.Points(partGeom, partMat);
-    scene.add(starField);
+    const particleField = new THREE.Points(partGeom, partMat);
+    engineGroup.add(particleField);
 
-    // 7. Daylight & Space Lighting (Full Earth Illumination)
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.95);
+    // H. Cinematic Studio Lighting
+    const ambientLight = new THREE.AmbientLight(0x060B14, 1.8);
     scene.add(ambientLight);
 
-    // Sun directional light (illuminates Earth vividly from front-top-right)
-    const sunLight = new THREE.DirectionalLight(0xffffff, 1.8);
-    sunLight.position.set(3, 4, 6);
-    scene.add(sunLight);
+    const keyLight = new THREE.DirectionalLight(COLOR_PLATINUM, 2.2);
+    keyLight.position.set(4, 5, 5);
+    scene.add(keyLight);
 
-    // Soft celestial rim fill light
-    const fillLight = new THREE.DirectionalLight(0x38bdf8, 0.7);
-    fillLight.position.set(-4, -1, 4);
+    const rimLight = new THREE.DirectionalLight(COLOR_SAPPHIRE, 2.8);
+    rimLight.position.set(-5, -3, -4);
+    scene.add(rimLight);
+
+    const fillLight = new THREE.PointLight(COLOR_CYAN, 1.5, 12);
+    fillLight.position.set(0, 0, 3);
     scene.add(fillLight);
 
-    // 8. Interactive Mouse / Touch Drag & Parallax
+    // I. Interactive Drag Physics & Mouse Tracking
     let mouseX = 0, mouseY = 0;
     let targetRotX = 0, targetRotY = 0;
     let isDragging = false;
@@ -323,9 +280,7 @@ function initCyberGlobe() {
             prevPointerY = e.clientY;
         });
 
-        window.addEventListener('mouseup', () => {
-            isDragging = false;
-        });
+        window.addEventListener('mouseup', () => { isDragging = false; });
 
         heroEl.addEventListener('mousemove', (e) => {
             if (!isDragging) return;
@@ -333,8 +288,8 @@ function initCyberGlobe() {
             const deltaY = e.clientY - prevPointerY;
             dragVelocityX = deltaX * 0.005;
             dragVelocityY = deltaY * 0.005;
-            globeRoot.rotation.y += dragVelocityX;
-            globeRoot.rotation.x += dragVelocityY;
+            engineGroup.rotation.y += dragVelocityX;
+            engineGroup.rotation.x += dragVelocityY;
             prevPointerX = e.clientX;
             prevPointerY = e.clientY;
         });
@@ -354,25 +309,23 @@ function initCyberGlobe() {
             const deltaY = e.touches[0].clientY - prevPointerY;
             dragVelocityX = deltaX * 0.006;
             dragVelocityY = deltaY * 0.006;
-            globeRoot.rotation.y += dragVelocityX;
-            globeRoot.rotation.x += dragVelocityY;
+            engineGroup.rotation.y += dragVelocityX;
+            engineGroup.rotation.x += dragVelocityY;
             prevPointerX = e.touches[0].clientX;
             prevPointerY = e.touches[0].clientY;
         }, { passive: true });
 
-        heroEl.addEventListener('touchend', () => {
-            isDragging = false;
-        });
+        heroEl.addEventListener('touchend', () => { isDragging = false; });
     }
 
-    // Responsive Canvas Resize
+    // Canvas Resize Handler
     window.addEventListener('resize', () => {
         camera.aspect = window.innerWidth / window.innerHeight;
         camera.updateProjectionMatrix();
         renderer.setSize(window.innerWidth, window.innerHeight);
     });
 
-    // High-Performance Visibility Pause (Zero GPU lag when scrolled past hero)
+    // High-Performance Visibility Culling (Zero GPU lag when scrolled past hero)
     let isHeroVisible = true;
     if ('IntersectionObserver' in window && heroEl) {
         const heroObserver = new IntersectionObserver((entries) => {
@@ -381,58 +334,86 @@ function initCyberGlobe() {
         heroObserver.observe(heroEl);
     }
 
-    // Main 60 FPS Render Loop
+    // GSAP ScrollTrigger Kinematic Explosion on Scroll
+    if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+        gsap.registerPlugin(ScrollTrigger);
+
+        gsap.to(ring1.scale, {
+            x: 1.4, y: 1.4, z: 1.4,
+            scrollTrigger: {
+                trigger: '#hero',
+                start: 'top top',
+                end: 'bottom top',
+                scrub: 1.2
+            }
+        });
+
+        gsap.to(ring2.rotation, {
+            z: Math.PI * 2,
+            scrollTrigger: {
+                trigger: '#hero',
+                start: 'top top',
+                end: 'bottom top',
+                scrub: 1.5
+            }
+        });
+
+        gsap.to(coreMesh.scale, {
+            x: 0.4, y: 0.4, z: 0.4,
+            scrollTrigger: {
+                trigger: '#hero',
+                start: 'top top',
+                end: 'bottom top',
+                scrub: 1
+            }
+        });
+    }
+
+    // Main 60–120 FPS Render Loop
     let clock = new THREE.Clock();
 
     function animate() {
         requestAnimationFrame(animate);
-        if (!isHeroVisible) return; // Instantly pauses WebGL loop when user scrolls down to projects!
-        const delta = clock.getDelta();
+        if (!isHeroVisible) return; // 0% GPU load when browsing projects!
 
-        // Natural continuous Earth rotation
+        const delta = clock.getDelta();
+        const time = clock.getElapsedTime();
+
+        // Asynchronous multi-axial ring rotations
+        ring1.rotation.z += 0.0035;
+        ring2.rotation.y += 0.0055;
+        ring2.rotation.x += 0.0025;
+        ring3.rotation.x -= 0.007;
+        ring3.rotation.z += 0.004;
+
+        // Core holographic pulse
+        coreMesh.rotation.y += 0.008;
+        coreMesh.rotation.x += 0.004;
+        const pulse = 1 + Math.sin(time * 3) * 0.06;
+        innerCore.scale.set(pulse, pulse, pulse);
+
+        // Particle cloud slow drift
+        particleField.rotation.z -= 0.0015;
+
+        // Inertia damping & cursor parallax tracking
         if (!isDragging) {
-            globeRoot.rotation.y += 0.002;
             dragVelocityX *= 0.94;
             dragVelocityY *= 0.94;
-            globeRoot.rotation.y += dragVelocityX;
-            globeRoot.rotation.x += dragVelocityY;
+            engineGroup.rotation.y += dragVelocityX;
+            engineGroup.rotation.x += dragVelocityY;
 
-            // Parallax tilt tracking cursor
-            targetRotY = mouseX * 0.18;
-            targetRotX = -mouseY * 0.18;
-            globeRoot.rotation.y += (targetRotY - (globeRoot.rotation.y % (Math.PI * 2))) * 0.02;
+            targetRotY = mouseX * 0.22;
+            targetRotX = -mouseY * 0.22;
+            engineGroup.rotation.y += (targetRotY - (engineGroup.rotation.y % (Math.PI * 2))) * 0.025;
+            engineGroup.rotation.x += (targetRotX - (engineGroup.rotation.x % (Math.PI * 2))) * 0.025;
         }
-
-        // Realistic clouds drift slightly faster over Earth
-        cloudsMesh.rotation.y += 0.0006;
-
-        // Animate radar rings
-        nodeRings.forEach(item => {
-            item.scale += delta * 1.6;
-            if (item.scale > 2.8) {
-                item.scale = 1;
-            }
-            item.mesh.scale.set(item.scale, item.scale, item.scale);
-            const fade = Math.max(0, 1 - (item.scale - 1) / 1.8);
-            item.mesh.material.opacity = fade * item.baseOpacity;
-        });
-
-        // Animate traveling data pulses
-        travelingPulses.forEach(item => {
-            item.progress = (item.progress + item.speed) % 1;
-            const pos = item.curve.getPoint(item.progress);
-            item.mesh.position.copy(pos);
-        });
-
-        // Ambient stars slow orbit
-        starField.rotation.y -= 0.0004;
 
         renderer.render(scene, camera);
     }
     animate();
 }
 
-// 3. COLUMN-WISE PROJECT SHOWCASE CAROUSEL
+// 4. COLUMN-WISE PROJECT SHOWCASE CAROUSEL
 let hasInitializedCarousel = false;
 
 function initProjectCarousel() {
@@ -454,14 +435,17 @@ function initProjectCarousel() {
 
     let currentIndex = 0;
 
-    // Create dot indicators
+    // Build indicator dots
     if (dotsContainer) {
         dotsContainer.innerHTML = '';
         cards.forEach((_, i) => {
             const dot = document.createElement('button');
             dot.className = `carousel-dot ${i === 0 ? 'active' : ''}`;
             dot.setAttribute('aria-label', `Go to project ${i + 1}`);
-            dot.addEventListener('click', () => goToSlide(i));
+            dot.addEventListener('click', () => {
+                goToSlide(i);
+                SoundFX.click();
+            });
             dotsContainer.appendChild(dot);
         });
     }
@@ -479,12 +463,12 @@ function initProjectCarousel() {
 
         if (isDesktop) {
             const cardWidth = cards[0].offsetWidth;
-            const gap = 32; // 2rem
+            const gap = 32;
             const offset = currentIndex * (cardWidth + gap);
             track.style.transform = `translateX(-${offset}px)`;
         } else {
             const cardWidth = cards[0].offsetWidth;
-            const gap = 24; // 1.5rem
+            const gap = 24;
             const offset = currentIndex * (cardWidth + gap);
             track.style.transform = `translateX(-${offset}px)`;
         }
@@ -514,6 +498,7 @@ function initProjectCarousel() {
             if (currentIndex > 0) {
                 currentIndex--;
                 updateCarousel();
+                SoundFX.click();
             }
         });
     }
@@ -523,11 +508,12 @@ function initProjectCarousel() {
             if (currentIndex < getMaxIndex()) {
                 currentIndex++;
                 updateCarousel();
+                SoundFX.click();
             }
         });
     }
 
-    // Keyboard navigation
+    // Keyboard arrow controls
     window.addEventListener('keydown', (e) => {
         const rect = track.getBoundingClientRect();
         const inView = rect.top < window.innerHeight && rect.bottom > 0;
@@ -536,9 +522,11 @@ function initProjectCarousel() {
         if (e.key === 'ArrowRight' && currentIndex < getMaxIndex()) {
             currentIndex++;
             updateCarousel();
+            SoundFX.click();
         } else if (e.key === 'ArrowLeft' && currentIndex > 0) {
             currentIndex--;
             updateCarousel();
+            SoundFX.click();
         }
     });
 
@@ -552,41 +540,70 @@ function initProjectCarousel() {
 
     track.addEventListener('touchend', (e) => {
         touchEndX = e.changedTouches[0].screenX;
-        handleSwipe();
+        if (touchEndX < touchStartX - 40 && currentIndex < getMaxIndex()) {
+            currentIndex++;
+            updateCarousel();
+        } else if (touchEndX > touchStartX + 40 && currentIndex > 0) {
+            currentIndex--;
+            updateCarousel();
+        }
     }, { passive: true });
-
-    function handleSwipe() {
-        const threshold = 40;
-        if (touchEndX < touchStartX - threshold) {
-            if (currentIndex < getMaxIndex()) {
-                currentIndex++;
-                updateCarousel();
-            }
-        }
-        if (touchEndX > touchStartX + threshold) {
-            if (currentIndex > 0) {
-                currentIndex--;
-                updateCarousel();
-            }
-        }
-    }
 
     window.addEventListener('resize', updateCarousel);
     setTimeout(updateCarousel, 100);
 }
 
-// 4. SPOTLIGHT HOVER FOR CARDS
-document.querySelectorAll('.service-card, .carousel-card').forEach(card => {
+// 5. LENIS VIRTUAL SMOOTH SCROLL (AWWWARDS TIER MOMENTUM)
+function initSmoothScroll() {
+    if (typeof Lenis === 'undefined') return;
+    const lenis = new Lenis({
+        duration: 1.15,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        orientation: 'vertical',
+        smoothWheel: true,
+        wheelMultiplier: 1.1
+    });
+
+    function raf(time) {
+        lenis.raf(time);
+        requestAnimationFrame(raf);
+    }
+    requestAnimationFrame(raf);
+
+    if (typeof ScrollTrigger !== 'undefined') {
+        lenis.on('scroll', ScrollTrigger.update);
+        gsap.ticker.add((time) => {
+            lenis.raf(time * 1000);
+        });
+        gsap.ticker.lagSmoothing(0);
+    }
+}
+
+// 6. AUDIO TOGGLE PILL IN NAVIGATION
+function initAudioToggle() {
+    const btn = document.getElementById('audio-toggle');
+    if (!btn) return;
+
+    btn.addEventListener('click', () => {
+        const isActive = SoundFX.toggle();
+        btn.classList.toggle('active', isActive);
+        const textSpan = btn.querySelector('.audio-text');
+        if (textSpan) {
+            textSpan.textContent = isActive ? 'AUDIO: ON' : 'AUDIO: OFF';
+        }
+    });
+}
+
+// 7. CARD SPOTLIGHT GRADIENT TRACKING
+document.querySelectorAll('.carousel-card, .bento-card').forEach(card => {
     card.addEventListener('mousemove', e => {
         const rect = card.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        card.style.setProperty('--mouse-x', `${x}px`);
-        card.style.setProperty('--mouse-y', `${y}px`);
+        card.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
+        card.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
     });
 });
 
-// 5. SCROLL REVEAL OBSERVER
+// 8. SCROLL REVEAL OBSERVER
 const revealElements = document.querySelectorAll('.reveal');
 if (revealElements.length > 0) {
     const revealObserver = new IntersectionObserver((entries) => {
@@ -600,10 +617,12 @@ if (revealElements.length > 0) {
     revealElements.forEach(el => revealObserver.observe(el));
 }
 
-// 6. SINGLE-PASS GUARANTEED INITIALIZATION
+// 9. GUARANTEED SINGLE-PASS BOOTSTRAP
 function bootstrap() {
+    initSmoothScroll();
     initCyberGlobe();
     initProjectCarousel();
+    initAudioToggle();
 }
 
 if (document.readyState === 'loading') {

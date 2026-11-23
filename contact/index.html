@@ -31,19 +31,19 @@
         .form-group { margin-bottom: 1.8rem; }
         .form-label {
             display: block; font-family: var(--font-mono); font-size: 0.8rem;
-            color: var(--accent-pink); margin-bottom: 0.6rem; letter-spacing: 1px;
+            color: var(--accent-sapphire); margin-bottom: 0.6rem; letter-spacing: 1px;
             text-transform: uppercase;
         }
         .form-input, .form-textarea {
             width: 100%; padding: 14px 18px; border-radius: 12px;
-            background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border);
+            background: rgba(226, 232, 240, 0.03); border: 1px solid var(--border);
             color: #FFF; font-family: var(--font-body); font-size: 1rem;
             transition: all 0.3s var(--ease); outline: none;
         }
         .form-input:focus, .form-textarea:focus {
-            border-color: var(--accent-cyan);
-            box-shadow: 0 0 25px rgba(0, 240, 255, 0.25);
-            background: rgba(255, 255, 255, 0.06);
+            border-color: var(--accent-sapphire);
+            box-shadow: 0 0 25px var(--glow-sapphire);
+            background: rgba(226, 232, 240, 0.06);
         }
         .form-textarea { resize: vertical; min-height: 140px; }
 
@@ -53,22 +53,22 @@
             display: flex; flex-direction: column; gap: 2rem;
         }
         .info-item h4 {
-            font-family: var(--font-mono); font-size: 0.8rem; color: var(--accent-cyan);
+            font-family: var(--font-mono); font-size: 0.8rem; color: var(--accent-platinum);
             text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 0.5rem;
         }
         .info-item p, .info-item a {
             font-family: var(--font-heading); font-size: 1.35rem; color: #FFF;
             font-weight: 700; transition: color 0.3s;
         }
-        .info-item a:hover { color: var(--accent-pink); }
+        .info-item a:hover { color: var(--accent-sapphire); }
         
         .copy-pill {
             display: inline-flex; align-items: center; gap: 8px; margin-top: 0.6rem;
-            padding: 6px 14px; border-radius: 50px; background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.12); font-family: var(--font-mono);
+            padding: 6px 14px; border-radius: 50px; background: rgba(226, 232, 240, 0.05);
+            border: 1px solid var(--border); font-family: var(--font-mono);
             font-size: 0.75rem; color: var(--text-secondary); cursor: pointer; transition: all 0.2s;
         }
-        .copy-pill:hover { background: rgba(255, 46, 147, 0.15); border-color: var(--accent-pink); color: #FFF; }
+        .copy-pill:hover { background: rgba(59, 130, 246, 0.15); border-color: var(--accent-sapphire); color: #FFF; }
 
         @media (max-width: 992px) {
             .contact-grid { grid-template-columns: 1fr; gap: 3rem; }

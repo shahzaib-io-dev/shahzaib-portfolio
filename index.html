@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shahzaib — Creative Full-Stack Engineer & Designer</title>
+    <title>Shahzaib — Creative Full-Stack Architect & 3D Web Engineer</title>
     
     <!-- Favicon -->
     <link rel="icon" type="image/jpeg" href="images/logo.jpg">
@@ -11,25 +11,30 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     
-    <!-- Three.js for 3D Cybernetic Scene -->
+    <!-- Three.js 3D WebGL Engine -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
+    <!-- GSAP & ScrollTrigger -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+    <!-- Lenis Smooth Virtual Scroll -->
+    <script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script>
+
     <!-- Master Stylesheet -->
-    <link rel="stylesheet" href="assets/css/style.css?v=4.2">
+    <link rel="stylesheet" href="assets/css/style.css?v=5.0">
 
     <style>
-        /* Specific Hero & Index Styles */
+        /* Hero Section Styling — Midnight Sapphire & Platinum */
         #hero {
             position: relative; min-height: 100vh;
             display: flex; align-items: center; justify-content: center;
             padding: 130px 0 70px; overflow: hidden;
             cursor: grab;
         }
-        #hero:active {
-            cursor: grabbing;
-        }
+        #hero:active { cursor: grabbing; }
         #three-canvas-container {
             position: absolute; inset: 0; z-index: 1; pointer-events: none;
             opacity: 1;
@@ -42,18 +47,22 @@
         .hero-pill {
             display: inline-flex; align-items: center; gap: 8px;
             padding: 6px 14px; border-radius: 100px;
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(16, 25, 41, 0.75);
+            border: 1px solid var(--border);
             font-family: var(--font-mono); font-size: 0.78rem;
-            color: var(--text-secondary); backdrop-filter: blur(10px);
+            color: var(--accent-platinum); backdrop-filter: blur(10px);
         }
-        .hero-pill span.dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent-cyan); box-shadow: 0 0 10px var(--accent-cyan); }
+        .hero-pill span.dot {
+            width: 7px; height: 7px; border-radius: 50%;
+            background: var(--accent-sapphire);
+            box-shadow: 0 0 10px var(--accent-sapphire);
+        }
         
         .hero-title {
             font-family: var(--font-heading);
             font-size: clamp(3.2rem, 7.2vw, 6.6rem);
             letter-spacing: -3px; line-height: 0.95;
-            display: flex; flex-direction: column; text-transform: uppercase; font-weight: 700;
+            display: flex; flex-direction: column; text-transform: uppercase; font-weight: 800;
         }
         .line-container { overflow: hidden; }
         .line-text {
@@ -66,18 +75,18 @@
         .line-container:nth-child(3) .line-text { animation-delay: 0.45s; }
         
         .line-text.stroke {
-            color: transparent; -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.6);
+            color: transparent; -webkit-text-stroke: 1.5px rgba(226, 232, 240, 0.4);
         }
         .line-text.stroke:hover {
-            color: var(--accent-pink); -webkit-text-stroke: 1.5px var(--accent-pink);
-            text-shadow: 0 0 40px var(--accent-pink); transform: translateY(-4px);
+            color: var(--accent-sapphire); -webkit-text-stroke: 1.5px var(--accent-sapphire);
+            text-shadow: 0 0 40px var(--accent-sapphire); transform: translateY(-4px);
         }
         .line-text.gradient {
-            background: linear-gradient(135deg, #FFFFFF 0%, #E2DCFF 40%, var(--accent-cyan) 100%);
+            background: linear-gradient(135deg, #FFFFFF 0%, #E2E8F0 50%, var(--accent-sapphire) 100%);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
         .line-text.gradient:hover {
-            filter: drop-shadow(0 0 35px rgba(0, 240, 255, 0.6));
+            filter: drop-shadow(0 0 35px var(--glow-sapphire));
             transform: translateY(-4px);
         }
 
@@ -90,25 +99,25 @@
         .hero-actions { display: flex; gap: 1rem; align-items: center; margin-top: 2.2rem; }
         .btn-primary {
             display: inline-flex; align-items: center; gap: 10px;
-            background: linear-gradient(135deg, var(--accent-pink), #B70F62);
+            background: linear-gradient(135deg, var(--accent-sapphire), #1D4ED8);
             color: #FFF; padding: 14px 28px; border-radius: 100px;
             font-family: var(--font-heading); font-weight: 700; font-size: 0.95rem;
             letter-spacing: 0.5px; transition: all 0.35s var(--ease);
-            box-shadow: 0 10px 30px var(--glow-pink);
+            box-shadow: 0 10px 30px var(--glow-sapphire);
         }
         .btn-primary:hover {
             transform: translateY(-3px) scale(1.03);
-            box-shadow: 0 15px 40px rgba(255, 46, 147, 0.6);
+            box-shadow: 0 15px 40px rgba(59, 130, 246, 0.6);
         }
         .btn-ghost {
             display: inline-flex; align-items: center; gap: 10px;
-            background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.12);
+            background: rgba(226, 232, 240, 0.04); border: 1px solid var(--border);
             color: var(--text-primary); padding: 14px 26px; border-radius: 100px;
             font-family: var(--font-heading); font-weight: 600; font-size: 0.95rem;
             backdrop-filter: blur(12px); transition: all 0.35s var(--ease);
         }
         .btn-ghost:hover {
-            background: rgba(255, 255, 255, 0.1); border-color: rgba(255, 255, 255, 0.3);
+            background: rgba(226, 232, 240, 0.1); border-color: var(--border-platinum);
             transform: translateY(-3px);
         }
 
@@ -120,35 +129,35 @@
         }
         .aura-glow {
             position: absolute; width: 340px; height: 340px; border-radius: 50%;
-            background: radial-gradient(circle, var(--accent-pink) 0%, var(--accent-cyan) 60%, transparent 80%);
-            filter: blur(85px); opacity: 0.35; transition: all 0.8s var(--ease); z-index: 1;
+            background: radial-gradient(circle, var(--accent-sapphire) 0%, rgba(226, 232, 240, 0.2) 60%, transparent 80%);
+            filter: blur(90px); opacity: 0.35; transition: all 0.8s var(--ease); z-index: 1;
         }
         .hero-card-3d {
             position: relative; width: 320px; height: 430px; border-radius: 28px;
             overflow: hidden; z-index: 2;
-            background: rgba(18, 15, 28, 0.65);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            background: rgba(16, 25, 41, 0.7);
+            border: 1px solid var(--border-platinum);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(226, 232, 240, 0.25);
             backdrop-filter: blur(20px);
             transition: transform 0.6s var(--ease), border-color 0.4s;
             transform-style: preserve-3d;
         }
         .hero-card-3d img {
             width: 100%; height: 100%; object-fit: cover;
-            filter: grayscale(20%) contrast(105%);
+            filter: grayscale(15%) contrast(105%);
             transition: all 0.6s var(--ease);
         }
         .hero-card-meta {
             position: absolute; bottom: 0; inset-inline: 0; padding: 24px;
-            background: linear-gradient(180deg, transparent 0%, rgba(6, 5, 10, 0.95) 80%);
+            background: linear-gradient(180deg, transparent 0%, rgba(6, 11, 20, 0.95) 80%);
             z-index: 3; display: flex; flex-direction: column; gap: 4px;
         }
         .hero-card-meta h4 { font-family: var(--font-heading); font-size: 1.25rem; font-weight: 700; color: #FFF; }
-        .hero-card-meta p { font-family: var(--font-mono); font-size: 0.76rem; color: var(--accent-cyan); }
+        .hero-card-meta p { font-family: var(--font-mono); font-size: 0.76rem; color: var(--accent-sapphire); }
         .hero-visual:hover .hero-card-3d {
-            border-color: var(--accent-pink);
+            border-color: var(--accent-sapphire);
             transform: translateY(-8px) rotateY(-8deg) rotateX(4deg);
-            box-shadow: 0 40px 80px rgba(255, 46, 147, 0.3);
+            box-shadow: 0 40px 80px rgba(59, 130, 246, 0.35);
         }
         .hero-visual:hover .hero-card-3d img { filter: grayscale(0%) scale(1.04); }
         .hero-visual:hover .aura-glow { opacity: 0.65; transform: scale(1.15); }
@@ -156,7 +165,7 @@
         /* Marquee Ribbon */
         .marquee-wrapper {
             padding: 1.3rem 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
-            background: rgba(14, 12, 22, 0.7); backdrop-filter: blur(10px);
+            background: rgba(16, 25, 41, 0.6); backdrop-filter: blur(10px);
             overflow: hidden; display: flex; white-space: nowrap;
             mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
             -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
@@ -164,25 +173,23 @@
         .marquee-content { display: flex; gap: 3.5rem; align-items: center; animation: marquee 30s linear infinite; }
         .marquee-content h3 {
             font-family: var(--font-heading); font-size: 1.15rem; font-weight: 700;
-            color: transparent; -webkit-text-stroke: 1px rgba(255, 255, 255, 0.4); text-transform: uppercase;
+            color: transparent; -webkit-text-stroke: 1px rgba(226, 232, 240, 0.35); text-transform: uppercase;
             letter-spacing: 1px;
         }
-        .marquee-content span { color: var(--accent-cyan); font-size: 1.2rem; text-shadow: 0 0 10px var(--accent-cyan); }
+        .marquee-content span { color: var(--accent-sapphire); font-size: 1.2rem; text-shadow: 0 0 10px var(--accent-sapphire); }
 
-        .archive-cta-banner {
-            margin-top: 4rem; text-align: center;
-        }
+        .archive-cta-banner { margin-top: 4rem; text-align: center; }
         .btn-view-archive {
             display: inline-flex; align-items: center; gap: 12px;
             padding: 16px 36px; border-radius: 100px;
-            background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.15);
+            background: rgba(226, 232, 240, 0.03); border: 1px solid var(--border);
             font-family: var(--font-heading); font-weight: 700; font-size: 1rem;
             color: #FFF; backdrop-filter: blur(15px); transition: all 0.35s var(--ease);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
         }
         .btn-view-archive:hover {
-            border-color: var(--accent-pink); background: rgba(255, 46, 147, 0.1);
-            transform: translateY(-4px); box-shadow: 0 15px 40px var(--glow-pink);
+            border-color: var(--accent-sapphire); background: rgba(59, 130, 246, 0.1);
+            transform: translateY(-4px); box-shadow: 0 15px 40px var(--glow-sapphire);
         }
 
         @keyframes slideUp { to { transform: translateY(0); } }
@@ -202,7 +209,7 @@
     <div class="noise-overlay"></div>
     <div class="ambient-glow" id="ambient-glow"></div>
     <div class="cursor-dot"></div>
-    <div class="cursor-outline"><span class="cursor-text">VIEW</span></div>
+    <div class="cursor-outline"><span class="cursor-text">EXPLORE</span></div>
 
     <!-- GLOBAL MULTI-PAGE NAVIGATION (CLEAN URLS) -->
     <nav>
@@ -216,10 +223,21 @@
             <a href="about/">About & Stack</a>
             <a href="contact/">Contact</a>
         </div>
+        
+        <!-- Web Audio Synthesizer Toggle -->
+        <button id="audio-toggle" class="audio-pill" data-cursor="AUDIO" aria-label="Toggle Sound Effects">
+            <span class="audio-bars">
+                <span class="audio-bar"></span>
+                <span class="audio-bar"></span>
+                <span class="audio-bar"></span>
+            </span>
+            <span class="audio-text">AUDIO: OFF</span>
+        </button>
+
         <a href="contact/" class="nav-btn" data-cursor="TALK">Let's Talk ↗</a>
     </nav>
 
-    <!-- HERO SECTION WITH INTERACTIVE 3D WEBGL MESH -->
+    <!-- HERO SECTION WITH 3D QUANTUM CHRONO-CORE -->
     <section id="hero">
         <div id="three-canvas-container"></div>
         <div class="container hero-grid">
@@ -227,16 +245,16 @@
                 <div class="hero-badge-wrap">
                     <div class="hero-pill">
                         <span class="dot"></span>
-                        FULL-STACK DIGITAL PRODUCT CRAFTER
+                        FULL-STACK DIGITAL PRODUCT ARCHITECT
                     </div>
                 </div>
                 <h1 class="hero-title">
                     <div class="line-container"><span class="line-text stroke">SHAHZAIB</span></div>
                     <div class="line-container"><span class="line-text gradient">CREATIVE</span></div>
-                    <div class="line-container"><span class="line-text stroke">ENGINEER</span></div>
+                    <div class="line-container"><span class="line-text stroke">ARCHITECT</span></div>
                 </h1>
                 <p class="hero-subtitle">
-                    Architecting <strong>production-grade digital software</strong>, interactive 3D web systems, and AI workspaces with obsessive design craft.
+                    Architecting <strong>production-grade digital software</strong>, kinetic 3D web systems, and autonomous AI workspaces with obsessive design craft.
                 </p>
                 <div class="hero-actions">
                     <a href="#work" class="btn-primary" data-cursor="EXPLORE">Explore Work ↓</a>
@@ -261,12 +279,12 @@
     <div class="marquee-wrapper">
         <div class="marquee-content">
             <h3>NEXT.JS 16 & REACT 19</h3> <span>✦</span>
-            <h3>THREE.JS & 3D WEB</h3> <span>✦</span>
+            <h3>THREE.JS & 3D WEBGL</h3> <span>✦</span>
             <h3>FULL-STACK SAAS & AI</h3> <span>✦</span>
             <h3>IMMERSIVE UI / UX</h3> <span>✦</span>
             <h3>DRIZZLE & POSTGRESQL</h3> <span>✦</span>
             <h3>NEXT.JS 16 & REACT 19</h3> <span>✦</span>
-            <h3>THREE.JS & 3D WEB</h3> <span>✦</span>
+            <h3>THREE.JS & 3D WEBGL</h3> <span>✦</span>
             <h3>FULL-STACK SAAS & AI</h3> <span>✦</span>
             <h3>IMMERSIVE UI / UX</h3> <span>✦</span>
             <h3>DRIZZLE & POSTGRESQL</h3> <span>✦</span>
@@ -334,7 +352,7 @@
                         <div>
                             <div class="project-tag-row">
                                 <span class="project-num">/ 02</span>
-                                <span class="project-badge cyan">Cinematic Discovery</span>
+                                <span class="project-badge platinum">Cinematic Discovery</span>
                             </div>
                             <h3 class="project-title">CINEVAULT</h3>
                             <p class="project-desc">Ultra-immersive streaming cinema discovery engine. Interactive video trailers, dynamic backdrop transitions, curated archives, and silky glassmorphic controls.</p>
@@ -390,7 +408,7 @@
                         <div>
                             <div class="project-tag-row">
                                 <span class="project-num">/ 04</span>
-                                <span class="project-badge cyan">Progressive Web App</span>
+                                <span class="project-badge platinum">Progressive Web App</span>
                             </div>
                             <h3 class="project-title">GitFinder</h3>
                             <p class="project-desc">A sleek, installable PWA to explore GitHub developers worldwide with real-time analytics, instant query caching, and dynamic language matrices.</p>
@@ -420,35 +438,74 @@
         </div>
     </section>
 
-    <!-- CORE DISCIPLINES / CAPABILITIES -->
+    <!-- HOLOGRAPHIC BENTO MATRIX (CAPABILITIES & TELEMETRY) -->
     <section id="services" class="container">
         <div class="section-header reveal">
-            <div class="section-eyebrow">CAPABILITIES</div>
-            <h2 class="section-title">Engineered For Impact.</h2>
+            <div class="section-eyebrow">ENGINEERING CAPABILITIES</div>
+            <h2 class="section-title">Designed For Scale.</h2>
         </div>
-        <div class="services-grid">
-            <div class="service-card reveal">
-                <span class="service-icon">⚡</span>
-                <h4>Full-Stack Architecture</h4>
-                <p>Engineering production web applications from ground up using Next.js 16, React 19, TypeScript, PostgreSQL, and scalable Drizzle models.</p>
+        
+        <div class="bento-grid">
+            
+            <!-- Bento 1 (Wide): Full-Stack Architecture -->
+            <div class="bento-card wide reveal">
+                <div>
+                    <span class="bento-icon">⚡</span>
+                    <h3 class="bento-title">Enterprise Full-Stack Architecture</h3>
+                    <p class="bento-desc">Architecting robust, zero-compromise production web applications with Next.js 16, React 19, TypeScript, PostgreSQL, and scalable Drizzle models designed for million-user elasticity.</p>
+                </div>
+                <div class="telemetry-row">
+                    <span class="telemetry-stat">100%</span>
+                    <span class="telemetry-label">Type-Safe Production SaaS</span>
+                </div>
             </div>
-            <div class="service-card reveal" style="transition-delay: 120ms;">
-                <span class="service-icon">🧠</span>
-                <h4>AI Systems & Integrations</h4>
-                <p>Integrating production LLMs (Claude, GPT, Gemini), structured agent toolkits, BYOK systems, and live context management.</p>
+
+            <!-- Bento 2: Autonomous AI Workspaces -->
+            <div class="bento-card reveal" style="transition-delay: 100ms;">
+                <div>
+                    <span class="bento-icon">🧠</span>
+                    <h3 class="bento-title">Autonomous AI Systems</h3>
+                    <p class="bento-desc">Integrating multi-provider LLMs (Claude, GPT, Gemini), real-time streaming contexts, BYOK security models, and autonomous tool-calling agents.</p>
+                </div>
+                <div class="telemetry-row">
+                    <span class="telemetry-stat">&lt;35ms</span>
+                    <span class="telemetry-label">Edge Response Latency</span>
+                </div>
             </div>
-            <div class="service-card reveal" style="transition-delay: 240ms;">
-                <span class="service-icon">✦</span>
-                <h4>Cinematic 3D & Interaction</h4>
-                <p>Transforming ordinary layouts into tactile digital experiences with WebGL, Three.js 3D meshes, smooth physics, and precise micro-interactions.</p>
+
+            <!-- Bento 3: Cinematic 3D WebGL -->
+            <div class="bento-card reveal" style="transition-delay: 200ms;">
+                <div>
+                    <span class="bento-icon">💎</span>
+                    <h3 class="bento-title">Cinematic 3D WebGL</h3>
+                    <p class="bento-desc">Transforming static websites into kinetic digital experiences with Three.js WebGL shaders, gyroscopic kinematics, and Lenis virtual scroll.</p>
+                </div>
+                <div class="telemetry-row">
+                    <span class="telemetry-stat">120 FPS</span>
+                    <span class="telemetry-label">Hardware Accelerated</span>
+                </div>
             </div>
+
+            <!-- Bento 4 (Wide): Shipped Velocity -->
+            <div class="bento-card wide reveal" style="transition-delay: 300ms;">
+                <div>
+                    <span class="bento-icon">✦</span>
+                    <h3 class="bento-title">Obsessive Design Craft & Speed</h3>
+                    <p class="bento-desc">Obsessive attention to micro-interactions, spatial audio, and high-conversion aesthetic luxury that commands instant industry authority.</p>
+                </div>
+                <div class="telemetry-row">
+                    <span class="telemetry-stat">6+</span>
+                    <span class="telemetry-label">Live Shipped Production Systems</span>
+                </div>
+            </div>
+
         </div>
     </section>
 
     <!-- KINETIC FOOTER -->
     <footer id="contact">
         <div class="footer-huge-wrap">
-            <a href="contact/" class="footer-huge-text" data-cursor="MAIL">LET'S TALK</a>
+            <a href="contact/" class="footer-huge-text" data-cursor="BUILD">LET'S BUILD</a>
         </div>
         <div class="footer-bottom">
             <div>© 2026 SHAHZAIB · CRAFTED WITH OBSESSION</div>
@@ -460,6 +517,6 @@
     </footer>
 
     <!-- Master Script Controller -->
-    <script src="assets/js/main.js?v=4.2"></script>
+    <script src="assets/js/main.js?v=5.0"></script>
 </body>
 </html>
