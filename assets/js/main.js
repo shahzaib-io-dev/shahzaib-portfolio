@@ -1,6 +1,6 @@
 // ==========================================================================
-// SHAHZAIB DIGITAL — GOD-LEVEL 3D KINETIC ARCHITECTURE & AUDIO ENGINE
-// Theme: Midnight Sapphire & Platinum
+// SHAHZAIB DIGITAL — INTERSTELLAR BLACK HOLE 3D ENGINE & GLB LOADER
+// Theme: Midnight Sapphire, Platinum & Relativistic Accretion Singularity
 // ==========================================================================
 
 // 1. WEB AUDIO API SYNTHESIZER (ZERO ASSET OVERHEAD)
@@ -106,21 +106,21 @@ const SoundFX = (function () {
     });
 })();
 
-// 3. THE 3D KINETIC QUANTUM CHRONO-CORE (THREE.JS)
-let hasInitializedGlobe = false;
+// 3. CINEMATIC INTERSTELLAR BLACK HOLE (GARGANTUA ACCRETION & GRAVITATIONAL LENSING)
+let hasInitializedBlackHole = false;
 
 function initCyberGlobe() {
-    if (hasInitializedGlobe) return;
+    if (hasInitializedBlackHole) return;
     const container = document.getElementById('three-canvas-container');
     if (!container || typeof THREE === 'undefined') return;
-    hasInitializedGlobe = true;
+    hasInitializedBlackHole = true;
 
     container.innerHTML = '';
 
-    // Scene & Perspective Camera
+    // Scene & Camera
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-    camera.position.set(0, 0, 6.2);
+    camera.position.set(0, 0, 6.0);
 
     const renderer = new THREE.WebGLRenderer({
         alpha: true,
@@ -133,134 +133,231 @@ function initCyberGlobe() {
     renderer.outputEncoding = THREE.sRGBEncoding;
     container.appendChild(renderer.domElement);
 
-    // Master Engine Group
-    const engineGroup = new THREE.Group();
-    scene.add(engineGroup);
+    // Master Black Hole Root Group
+    const blackHoleGroup = new THREE.Group();
+    scene.add(blackHoleGroup);
 
-    // Color definitions
-    const COLOR_SAPPHIRE = 0x3B82F6;
-    const COLOR_PLATINUM = 0xE2E8F0;
-    const COLOR_DEEP_BLUE = 0x1E3A8A;
-    const COLOR_CYAN = 0x06B6D4;
+    // Initial cinematic Interstellar tilt (~18 degrees)
+    blackHoleGroup.rotation.x = 0.28;
 
-    // A. Outer Gimbal Ring (Titanium / Platinum)
-    const ring1Geom = new THREE.TorusGeometry(2.35, 0.038, 20, 100);
-    const ring1Mat = new THREE.MeshStandardMaterial({
-        color: COLOR_PLATINUM,
-        metalness: 0.92,
-        roughness: 0.18,
-        emissive: 0x1E293B,
-        emissiveIntensity: 0.25
-    });
-    const ring1 = new THREE.Mesh(ring1Geom, ring1Mat);
-    engineGroup.add(ring1);
+    // A. Procedural Accretion Plasma Disk Texture Generator
+    function createAccretionTexture() {
+        const canvas = document.createElement('canvas');
+        canvas.width = 1024;
+        canvas.height = 1024;
+        const ctx = canvas.getContext('2d');
+        const cx = 512, cy = 512;
 
-    // B. Middle Orbital Ring (Royal Sapphire)
-    const ring2Geom = new THREE.TorusGeometry(1.92, 0.032, 20, 100);
-    const ring2Mat = new THREE.MeshStandardMaterial({
-        color: COLOR_SAPPHIRE,
-        metalness: 0.85,
-        roughness: 0.25,
-        emissive: COLOR_SAPPHIRE,
-        emissiveIntensity: 0.45
-    });
-    const ring2 = new THREE.Mesh(ring2Geom, ring2Mat);
-    ring2.rotation.x = Math.PI / 3;
-    engineGroup.add(ring2);
+        ctx.clearRect(0, 0, 1024, 1024);
 
-    // C. Inner Gyroscopic Ring (Electric Cyan Accent)
-    const ring3Geom = new THREE.TorusGeometry(1.52, 0.026, 16, 90);
-    const ring3Mat = new THREE.MeshStandardMaterial({
-        color: COLOR_CYAN,
-        metalness: 0.8,
-        roughness: 0.3,
-        emissive: COLOR_CYAN,
-        emissiveIntensity: 0.35
-    });
-    const ring3 = new THREE.Mesh(ring3Geom, ring3Mat);
-    ring3.rotation.y = Math.PI / 4;
-    engineGroup.add(ring3);
+        // Multi-stage radial plasma gradient with Doppler asymmetry
+        const maxR = 500;
+        const innerR = 175;
 
-    // D. Central Holographic Crystalline Core
-    const coreGeom = new THREE.IcosahedronGeometry(0.95, 1);
-    const coreMat = new THREE.MeshStandardMaterial({
-        color: COLOR_PLATINUM,
-        wireframe: true,
-        transparent: true,
-        opacity: 0.45,
-        emissive: COLOR_SAPPHIRE,
-        emissiveIntensity: 0.5
-    });
-    const coreMesh = new THREE.Mesh(coreGeom, coreMat);
-    engineGroup.add(coreMesh);
+        for (let r = maxR; r >= innerR; r -= 2) {
+            const norm = (r - innerR) / (maxR - innerR);
+            ctx.beginPath();
+            ctx.arc(cx, cy, r, 0, Math.PI * 2);
 
-    // E. Quantum Singularity Core (Inner glowing sphere)
-    const innerGeom = new THREE.SphereGeometry(0.55, 32, 32);
-    const innerMat = new THREE.MeshBasicMaterial({
-        color: COLOR_SAPPHIRE,
-        wireframe: false,
-        transparent: true,
-        opacity: 0.75
-    });
-    const innerCore = new THREE.Mesh(innerGeom, innerMat);
-    engineGroup.add(innerCore);
+            let alpha = 0;
+            let rCol = 59, gCol = 130, bCol = 246; // Royal Sapphire
 
-    // F. Pulsating Plasma Beacons on Rings
-    const beaconCount = 6;
-    const beacons = [];
-    for (let i = 0; i < beaconCount; i++) {
-        const bGeom = new THREE.SphereGeometry(0.045, 12, 12);
-        const bMat = new THREE.MeshBasicMaterial({ color: i % 2 === 0 ? COLOR_PLATINUM : COLOR_CYAN });
-        const bMesh = new THREE.Mesh(bGeom, bMat);
-        const angle = (i / beaconCount) * Math.PI * 2;
-        bMesh.position.set(Math.cos(angle) * 2.35, Math.sin(angle) * 2.35, 0);
-        ring1.add(bMesh);
-        beacons.push(bMesh);
+            if (norm < 0.15) {
+                // White-hot inner boundary (Innermost Stable Circular Orbit)
+                const subNorm = norm / 0.15;
+                rCol = Math.round(255 - subNorm * 10);
+                gCol = Math.round(255 - subNorm * 40);
+                bCol = 255;
+                alpha = 0.95 - subNorm * 0.15;
+            } else if (norm < 0.55) {
+                // Blazing Royal Sapphire & Electric Cyan plasma stream
+                const subNorm = (norm - 0.15) / 0.4;
+                rCol = Math.round(245 - subNorm * 186);
+                gCol = Math.round(215 - subNorm * 85);
+                bCol = Math.round(255 - subNorm * 9);
+                alpha = 0.85 - subNorm * 0.35;
+            } else {
+                // Outer trailing accretion dust into deep space
+                const subNorm = (norm - 0.55) / 0.45;
+                rCol = Math.round(59 - subNorm * 40);
+                gCol = Math.round(130 - subNorm * 90);
+                bCol = Math.round(246 - subNorm * 120);
+                alpha = 0.5 * (1 - subNorm);
+            }
+
+            ctx.strokeStyle = `rgba(${rCol}, ${gCol}, ${bCol}, ${alpha})`;
+            ctx.lineWidth = 3;
+            ctx.stroke();
+        }
+
+        // Add relativistic spiral filaments & turbulence
+        for (let a = 0; a < 60; a++) {
+            const startAngle = Math.random() * Math.PI * 2;
+            const startDist = innerR + Math.random() * 280;
+            ctx.beginPath();
+            ctx.arc(cx, cy, startDist, startAngle, startAngle + 1.2 + Math.random());
+            ctx.strokeStyle = `rgba(226, 232, 240, ${0.15 + Math.random() * 0.25})`;
+            ctx.lineWidth = 1.5 + Math.random() * 2;
+            ctx.stroke();
+        }
+
+        const texture = new THREE.CanvasTexture(canvas);
+        texture.wrapS = THREE.ClampToEdgeWrapping;
+        texture.wrapT = THREE.ClampToEdgeWrapping;
+        return texture;
     }
 
-    // G. Swirling Singularity Particle Torus (350 micro-photons)
-    const particleCount = 350;
-    const posArray = new Float32Array(particleCount * 3);
-    for (let i = 0; i < particleCount * 3; i += 3) {
-        const u = Math.random() * Math.PI * 2;
-        const v = Math.random() * Math.PI * 2;
-        const R = 2.4 + Math.random() * 0.8;
-        const r = 0.35 + Math.random() * 0.4;
-        posArray[i] = (R + r * Math.cos(v)) * Math.cos(u);
-        posArray[i + 1] = (R + r * Math.cos(v)) * Math.sin(u);
-        posArray[i + 2] = r * Math.sin(v) + (Math.random() - 0.5) * 1.5;
-    }
-    const partGeom = new THREE.BufferGeometry();
-    partGeom.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
-    const partMat = new THREE.PointsMaterial({
-        size: 0.035,
-        color: COLOR_PLATINUM,
+    const accretionTexture = createAccretionTexture();
+
+    // B. Pitch-Black Event Horizon (The Singularity)
+    const horizonGeom = new THREE.SphereGeometry(1.24, 64, 64);
+    const horizonMat = new THREE.MeshBasicMaterial({
+        color: 0x000000,
+        wireframe: false
+    });
+    const horizonMesh = new THREE.Mesh(horizonGeom, horizonMat);
+    blackHoleGroup.add(horizonMesh);
+
+    // C. Razor-Thin Photon Sphere Edge (Blinding Plasma Ring)
+    const photonGeom = new THREE.RingGeometry(1.25, 1.35, 120);
+    const photonMat = new THREE.MeshBasicMaterial({
+        color: 0xE2E8F0,
+        side: THREE.DoubleSide,
         transparent: true,
-        opacity: 0.75,
+        opacity: 0.98,
         blending: THREE.AdditiveBlending
     });
-    const particleField = new THREE.Points(partGeom, partMat);
-    engineGroup.add(particleField);
+    const photonRing = new THREE.Mesh(photonGeom, photonMat);
+    blackHoleGroup.add(photonRing);
 
-    // H. Cinematic Studio Lighting
-    const ambientLight = new THREE.AmbientLight(0x060B14, 1.8);
+    // D. Primary Equatorial Accretion Disk (Swirling Plasma Vortex)
+    const diskGeom = new THREE.RingGeometry(1.35, 4.3, 128, 40);
+    const diskMat = new THREE.MeshBasicMaterial({
+        map: accretionTexture,
+        side: THREE.DoubleSide,
+        transparent: true,
+        opacity: 0.96,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false
+    });
+    const diskMesh = new THREE.Mesh(diskGeom, diskMat);
+    diskMesh.rotation.x = Math.PI / 2.22; // ~81 degrees tilt for canonical Interstellar angle
+    blackHoleGroup.add(diskMesh);
+
+    // E. Gravitational Lensing Halo (The Famous Upper & Lower Einstein Arcs)
+    // General relativity bends the back of the accretion disk over and under the event horizon:
+    const topLensingGeom = new THREE.TorusGeometry(1.78, 0.42, 32, 128, Math.PI);
+    const lensingMat = new THREE.MeshBasicMaterial({
+        color: 0x3B82F6,
+        transparent: true,
+        opacity: 0.88,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false
+    });
+    const topLensingArc = new THREE.Mesh(topLensingGeom, lensingMat);
+    topLensingArc.position.z = -0.06;
+    blackHoleGroup.add(topLensingArc);
+
+    const bottomLensingGeom = new THREE.TorusGeometry(1.78, 0.36, 32, 128, Math.PI);
+    const bottomLensingArc = new THREE.Mesh(bottomLensingGeom, lensingMat);
+    bottomLensingArc.rotation.z = Math.PI;
+    bottomLensingArc.position.z = -0.06;
+    blackHoleGroup.add(bottomLensingArc);
+
+    // Inner Lensing Flare (Platinum-hot light curvature)
+    const innerLensGeom = new THREE.TorusGeometry(1.42, 0.12, 24, 128, Math.PI);
+    const innerLensMat = new THREE.MeshBasicMaterial({
+        color: 0xE2E8F0,
+        transparent: true,
+        opacity: 0.92,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false
+    });
+    const innerLensArc = new THREE.Mesh(innerLensGeom, innerLensMat);
+    innerLensArc.position.z = -0.05;
+    blackHoleGroup.add(innerLensArc);
+
+    const innerLensBottom = new THREE.Mesh(innerLensGeom, innerLensMat);
+    innerLensBottom.rotation.z = Math.PI;
+    innerLensBottom.position.z = -0.05;
+    blackHoleGroup.add(innerLensBottom);
+
+    // F. Relativistic Particle Infall Vortex (1,000 Keplerian Swirling Micro-Photons)
+    const particleCount = 1000;
+    const posArray = new Float32Array(particleCount * 3);
+    const particleData = [];
+
+    for (let i = 0; i < particleCount; i++) {
+        const r = 1.38 + Math.pow(Math.random(), 1.5) * 3.1;
+        const theta = Math.random() * Math.PI * 2;
+        const speed = (0.028 / Math.sqrt(r)) * (0.8 + Math.random() * 0.4);
+        const yOffset = (Math.random() - 0.5) * 0.12 * (r / 2);
+
+        particleData.push({ r, theta, speed, yOffset });
+
+        // Position on tilted disk plane
+        const x = r * Math.cos(theta);
+        const z = r * Math.sin(theta) * Math.cos(Math.PI / 2.22);
+        const y = r * Math.sin(theta) * Math.sin(Math.PI / 2.22) + yOffset;
+
+        posArray[i * 3] = x;
+        posArray[i * 3 + 1] = y;
+        posArray[i * 3 + 2] = z;
+    }
+
+    const partGeom = new THREE.BufferGeometry();
+    partGeom.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+
+    const partMat = new THREE.PointsMaterial({
+        size: 0.038,
+        color: 0xE2E8F0,
+        transparent: true,
+        opacity: 0.9,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false
+    });
+    const particleVortex = new THREE.Points(partGeom, partMat);
+    blackHoleGroup.add(particleVortex);
+
+    // G. Ambient Starfield Dust (Cosmic Depth)
+    const starCount = 380;
+    const starPosArray = new Float32Array(starCount * 3);
+    for (let i = 0; i < starCount * 3; i += 3) {
+        const rad = 3.5 + Math.random() * 3.0;
+        const u = Math.random() * Math.PI * 2;
+        const v = Math.acos((Math.random() * 2) - 1);
+        starPosArray[i] = rad * Math.sin(v) * Math.cos(u);
+        starPosArray[i + 1] = rad * Math.sin(v) * Math.sin(u);
+        starPosArray[i + 2] = rad * Math.cos(v);
+    }
+    const starGeom = new THREE.BufferGeometry();
+    starGeom.setAttribute('position', new THREE.BufferAttribute(starPosArray, 3));
+    const starMat = new THREE.PointsMaterial({
+        size: 0.026,
+        color: 0x93C5FD,
+        transparent: true,
+        opacity: 0.65
+    });
+    const stars = new THREE.Points(starGeom, starMat);
+    scene.add(stars);
+
+    // H. Cinematic Lighting Setup
+    const ambientLight = new THREE.AmbientLight(0x060B14, 1.5);
     scene.add(ambientLight);
 
-    const keyLight = new THREE.DirectionalLight(COLOR_PLATINUM, 2.2);
-    keyLight.position.set(4, 5, 5);
-    scene.add(keyLight);
+    const sapphireGlowLight = new THREE.PointLight(0x3B82F6, 4.0, 16);
+    sapphireGlowLight.position.set(0, 0, 1.5);
+    scene.add(sapphireGlowLight);
 
-    const rimLight = new THREE.DirectionalLight(COLOR_SAPPHIRE, 2.8);
-    rimLight.position.set(-5, -3, -4);
-    scene.add(rimLight);
+    const platinumRimLight = new THREE.DirectionalLight(0xE2E8F0, 1.8);
+    platinumRimLight.position.set(4, 3, 5);
+    scene.add(platinumRimLight);
 
-    const fillLight = new THREE.PointLight(COLOR_CYAN, 1.5, 12);
-    fillLight.position.set(0, 0, 3);
-    scene.add(fillLight);
-
-    // I. Interactive Drag Physics & Mouse Tracking
+    // I. Anti-Aura-Loss Clamped 3D Physics & Mouse Drag
+    // The user can spin 360° horizontally as fast as they want,
+    // while vertical pitch is safely clamped to preserve the glorious Interstellar aura!
     let mouseX = 0, mouseY = 0;
-    let targetRotX = 0, targetRotY = 0;
+    let targetRotY = 0, targetRotX = 0.28;
     let isDragging = false;
     let prevPointerX = 0, prevPointerY = 0;
     let dragVelocityX = 0, dragVelocityY = 0;
@@ -287,9 +384,12 @@ function initCyberGlobe() {
             const deltaX = e.clientX - prevPointerX;
             const deltaY = e.clientY - prevPointerY;
             dragVelocityX = deltaX * 0.005;
-            dragVelocityY = deltaY * 0.005;
-            engineGroup.rotation.y += dragVelocityX;
-            engineGroup.rotation.x += dragVelocityY;
+            dragVelocityY = deltaY * 0.003;
+
+            blackHoleGroup.rotation.y += dragVelocityX;
+            // Anti-Aura-Loss Clamping: Never let pitch flip over or flatten!
+            blackHoleGroup.rotation.x = Math.max(-0.48, Math.min(0.48, blackHoleGroup.rotation.x + dragVelocityY));
+
             prevPointerX = e.clientX;
             prevPointerY = e.clientY;
         });
@@ -308,9 +408,11 @@ function initCyberGlobe() {
             const deltaX = e.touches[0].clientX - prevPointerX;
             const deltaY = e.touches[0].clientY - prevPointerY;
             dragVelocityX = deltaX * 0.006;
-            dragVelocityY = deltaY * 0.006;
-            engineGroup.rotation.y += dragVelocityX;
-            engineGroup.rotation.x += dragVelocityY;
+            dragVelocityY = deltaY * 0.0035;
+
+            blackHoleGroup.rotation.y += dragVelocityX;
+            blackHoleGroup.rotation.x = Math.max(-0.48, Math.min(0.48, blackHoleGroup.rotation.x + dragVelocityY));
+
             prevPointerX = e.touches[0].clientX;
             prevPointerY = e.touches[0].clientY;
         }, { passive: true });
@@ -334,12 +436,12 @@ function initCyberGlobe() {
         heroObserver.observe(heroEl);
     }
 
-    // GSAP ScrollTrigger Kinematic Explosion on Scroll
+    // GSAP ScrollTrigger Kinematic Gravitational Warping on Scroll
     if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
         gsap.registerPlugin(ScrollTrigger);
 
-        gsap.to(ring1.scale, {
-            x: 1.4, y: 1.4, z: 1.4,
+        gsap.to(blackHoleGroup.scale, {
+            x: 0.65, y: 0.65, z: 0.65,
             scrollTrigger: {
                 trigger: '#hero',
                 start: 'top top',
@@ -348,18 +450,8 @@ function initCyberGlobe() {
             }
         });
 
-        gsap.to(ring2.rotation, {
-            z: Math.PI * 2,
-            scrollTrigger: {
-                trigger: '#hero',
-                start: 'top top',
-                end: 'bottom top',
-                scrub: 1.5
-            }
-        });
-
-        gsap.to(coreMesh.scale, {
-            x: 0.4, y: 0.4, z: 0.4,
+        gsap.to(blackHoleGroup.position, {
+            y: 0.8,
             scrollTrigger: {
                 trigger: '#hero',
                 start: 'top top',
@@ -369,7 +461,7 @@ function initCyberGlobe() {
         });
     }
 
-    // Main 60–120 FPS Render Loop
+    // Main 60–120 FPS Relativistic Render Loop
     let clock = new THREE.Clock();
 
     function animate() {
@@ -379,33 +471,55 @@ function initCyberGlobe() {
         const delta = clock.getDelta();
         const time = clock.getElapsedTime();
 
-        // Asynchronous multi-axial ring rotations
-        ring1.rotation.z += 0.0035;
-        ring2.rotation.y += 0.0055;
-        ring2.rotation.x += 0.0025;
-        ring3.rotation.x -= 0.007;
-        ring3.rotation.z += 0.004;
+        // 1. Continuous Relativistic Disk Rotation
+        diskMesh.rotation.z += 0.005;
 
-        // Core holographic pulse
-        coreMesh.rotation.y += 0.008;
-        coreMesh.rotation.x += 0.004;
-        const pulse = 1 + Math.sin(time * 3) * 0.06;
-        innerCore.scale.set(pulse, pulse, pulse);
+        // 2. Photon sphere subtle energy breathing
+        const photonPulse = 1 + Math.sin(time * 3.5) * 0.025;
+        photonRing.scale.set(photonPulse, photonPulse, photonPulse);
 
-        // Particle cloud slow drift
-        particleField.rotation.z -= 0.0015;
+        // 3. Gravitational Lensing Halo shimmering
+        topLensingArc.scale.y = 1 + Math.sin(time * 2.2) * 0.03;
+        bottomLensingArc.scale.y = 1 + Math.cos(time * 2.2) * 0.03;
 
-        // Inertia damping & cursor parallax tracking
+        // 4. Keplerian Particle Infall Simulation (v ∝ 1/√r)
+        const positions = particleVortex.geometry.attributes.position.array;
+        for (let i = 0; i < particleCount; i++) {
+            const p = particleData[i];
+            p.theta += p.speed;
+
+            // Inward gravitational pull
+            p.r -= 0.0006;
+            if (p.r < 1.34) {
+                // Respawn at outer edge when swallowed by event horizon
+                p.r = 4.1 + Math.random() * 0.3;
+                p.speed = (0.028 / Math.sqrt(p.r)) * (0.8 + Math.random() * 0.4);
+            }
+
+            const x = p.r * Math.cos(p.theta);
+            const z = p.r * Math.sin(p.theta) * Math.cos(Math.PI / 2.22);
+            const y = p.r * Math.sin(p.theta) * Math.sin(Math.PI / 2.22) + p.yOffset;
+
+            positions[i * 3] = x;
+            positions[i * 3 + 1] = y;
+            positions[i * 3 + 2] = z;
+        }
+        particleVortex.geometry.attributes.position.needsUpdate = true;
+
+        // 5. Starfield slow cosmic drift
+        stars.rotation.y -= 0.0003;
+
+        // 6. Inertia Damping & Subtle Cursor Parallax
         if (!isDragging) {
-            dragVelocityX *= 0.94;
-            dragVelocityY *= 0.94;
-            engineGroup.rotation.y += dragVelocityX;
-            engineGroup.rotation.x += dragVelocityY;
+            dragVelocityX *= 0.95;
+            dragVelocityY *= 0.95;
+            blackHoleGroup.rotation.y += dragVelocityX + 0.0015; // Natural slow galactic spin
+            blackHoleGroup.rotation.x = Math.max(-0.48, Math.min(0.48, blackHoleGroup.rotation.x + dragVelocityY));
 
-            targetRotY = mouseX * 0.22;
-            targetRotX = -mouseY * 0.22;
-            engineGroup.rotation.y += (targetRotY - (engineGroup.rotation.y % (Math.PI * 2))) * 0.025;
-            engineGroup.rotation.x += (targetRotX - (engineGroup.rotation.x % (Math.PI * 2))) * 0.025;
+            // Parallax tracking with gentle spring
+            const targetX = 0.28 - mouseY * 0.12;
+            const targetY = mouseX * 0.15;
+            blackHoleGroup.rotation.x += (targetX - blackHoleGroup.rotation.x) * 0.02;
         }
 
         renderer.render(scene, camera);
@@ -413,7 +527,42 @@ function initCyberGlobe() {
     animate();
 }
 
-// 4. COLUMN-WISE PROJECT SHOWCASE CAROUSEL
+// 4. CLIENT .GLB / .GLTF LOADER HELPER (READY FOR PRODUCT MODELS)
+window.loadGLBModel = function (modelUrl, targetGroup, onLoadCallback) {
+    if (typeof THREE.GLTFLoader === 'undefined') {
+        console.warn('GLTFLoader is not loaded yet.');
+        return;
+    }
+    const loader = new THREE.GLTFLoader();
+    loader.load(
+        modelUrl,
+        function (gltf) {
+            const model = gltf.scene;
+            // Auto-center and normalize size
+            const box = new THREE.Box3().setFromObject(model);
+            const center = box.getCenter(new THREE.Vector3());
+            const size = box.getSize(new THREE.Vector3());
+            const maxDim = Math.max(size.x, size.y, size.z);
+            const scale = 2.5 / maxDim;
+            model.scale.set(scale, scale, scale);
+            model.position.sub(center.multiplyScalar(scale));
+
+            if (targetGroup) {
+                targetGroup.add(model);
+            }
+            if (onLoadCallback) {
+                onLoadCallback(model, gltf);
+            }
+            console.log('GLB Model loaded successfully:', modelUrl);
+        },
+        undefined,
+        function (error) {
+            console.error('Error loading GLB model:', error);
+        }
+    );
+};
+
+// 5. COLUMN-WISE PROJECT SHOWCASE CAROUSEL
 let hasInitializedCarousel = false;
 
 function initProjectCarousel() {
@@ -553,7 +702,7 @@ function initProjectCarousel() {
     setTimeout(updateCarousel, 100);
 }
 
-// 5. LENIS VIRTUAL SMOOTH SCROLL (AWWWARDS TIER MOMENTUM)
+// 6. LENIS VIRTUAL SMOOTH SCROLL (AWWWARDS TIER MOMENTUM)
 function initSmoothScroll() {
     if (typeof Lenis === 'undefined') return;
     const lenis = new Lenis({
@@ -579,7 +728,7 @@ function initSmoothScroll() {
     }
 }
 
-// 6. AUDIO TOGGLE PILL IN NAVIGATION
+// 7. AUDIO TOGGLE PILL IN NAVIGATION
 function initAudioToggle() {
     const btn = document.getElementById('audio-toggle');
     if (!btn) return;
@@ -594,7 +743,7 @@ function initAudioToggle() {
     });
 }
 
-// 7. CARD SPOTLIGHT GRADIENT TRACKING
+// 8. CARD SPOTLIGHT GRADIENT TRACKING
 document.querySelectorAll('.carousel-card, .bento-card').forEach(card => {
     card.addEventListener('mousemove', e => {
         const rect = card.getBoundingClientRect();
@@ -603,7 +752,7 @@ document.querySelectorAll('.carousel-card, .bento-card').forEach(card => {
     });
 });
 
-// 8. SCROLL REVEAL OBSERVER
+// 9. SCROLL REVEAL OBSERVER
 const revealElements = document.querySelectorAll('.reveal');
 if (revealElements.length > 0) {
     const revealObserver = new IntersectionObserver((entries) => {
@@ -617,7 +766,7 @@ if (revealElements.length > 0) {
     revealElements.forEach(el => revealObserver.observe(el));
 }
 
-// 9. GUARANTEED SINGLE-PASS BOOTSTRAP
+// 10. GUARANTEED SINGLE-PASS BOOTSTRAP
 function bootstrap() {
     initSmoothScroll();
     initCyberGlobe();
