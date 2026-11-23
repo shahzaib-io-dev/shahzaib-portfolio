@@ -113,429 +113,219 @@ const SoundFX = (function () {
     });
 })();
 
-// 3. CINEMATIC INTERSTELLAR BLACK HOLE (GARGANTUA ACCRETION & GRAVITATIONAL LENSING)
-let hasInitializedBlackHole = false;
+// 3. CINEMATIC EARTH HERO — REAL TEXTURES, CLOUDS, ATMOSPHERE
+let hasInitializedEarth = false;
 
 function initCyberGlobe() {
-    if (hasInitializedBlackHole) return;
+    if (hasInitializedEarth) return;
     const container = document.getElementById('three-canvas-container');
     if (!container || typeof THREE === 'undefined') return;
-    hasInitializedBlackHole = true;
+    hasInitializedEarth = true;
 
     container.innerHTML = '';
 
-    // Scene & Camera
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-    camera.position.set(0, 0, 6.0);
+    const camera = new THREE.PerspectiveCamera(38, window.innerWidth / window.innerHeight, 0.1, 100);
+    camera.position.set(0.15, 0.08, 5.25);
 
     const renderer = new THREE.WebGLRenderer({
         alpha: true,
-        antialias: true,
+        antialias: window.devicePixelRatio < 2,
         powerPreference: 'high-performance',
         precision: 'mediump'
     });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.75));
     renderer.outputEncoding = THREE.sRGBEncoding;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 0.82;
+    renderer.domElement.setAttribute('aria-hidden', 'true');
     container.appendChild(renderer.domElement);
 
-    // Master Black Hole Root Group
-    const blackHoleGroup = new THREE.Group();
-    scene.add(blackHoleGroup);
+    const earthGroup = new THREE.Group();
+    earthGroup.position.set(0.5, 0.04, 0);
+    earthGroup.rotation.set(0.08, -0.48, -0.06);
+    scene.add(earthGroup);
 
-    // Initial cinematic Interstellar tilt (~18 degrees)
-    blackHoleGroup.rotation.x = 0.28;
-
-    // A. Procedural Accretion Plasma Disk Texture Generator
-    function createAccretionTexture() {
-        const canvas = document.createElement('canvas');
-        canvas.width = 1024;
-        canvas.height = 1024;
-        const ctx = canvas.getContext('2d');
-        const cx = 512, cy = 512;
-
-        ctx.clearRect(0, 0, 1024, 1024);
-
-        // Multi-stage radial plasma gradient with Doppler asymmetry
-        const maxR = 500;
-        const innerR = 175;
-
-        for (let r = maxR; r >= innerR; r -= 2) {
-            const norm = (r - innerR) / (maxR - innerR);
-            ctx.beginPath();
-            ctx.arc(cx, cy, r, 0, Math.PI * 2);
-
-            let alpha = 0;
-            let rCol = 59, gCol = 130, bCol = 246; // Royal Sapphire
-
-            if (norm < 0.15) {
-                // White-hot inner boundary (Innermost Stable Circular Orbit)
-                const subNorm = norm / 0.15;
-                rCol = Math.round(255 - subNorm * 10);
-                gCol = Math.round(255 - subNorm * 40);
-                bCol = 255;
-                alpha = 0.95 - subNorm * 0.15;
-            } else if (norm < 0.55) {
-                // Blazing Royal Sapphire & Electric Cyan plasma stream
-                const subNorm = (norm - 0.15) / 0.4;
-                rCol = Math.round(245 - subNorm * 186);
-                gCol = Math.round(215 - subNorm * 85);
-                bCol = Math.round(255 - subNorm * 9);
-                alpha = 0.85 - subNorm * 0.35;
-            } else {
-                // Outer trailing accretion dust into deep space
-                const subNorm = (norm - 0.55) / 0.45;
-                rCol = Math.round(59 - subNorm * 40);
-                gCol = Math.round(130 - subNorm * 90);
-                bCol = Math.round(246 - subNorm * 120);
-                alpha = 0.5 * (1 - subNorm);
-            }
-
-            ctx.strokeStyle = `rgba(${rCol}, ${gCol}, ${bCol}, ${alpha})`;
-            ctx.lineWidth = 3;
-            ctx.stroke();
+    const loader = new THREE.TextureLoader();
+    const textureCache = {};
+    const loadTexture = (path) => {
+        if (!textureCache[path]) {
+            textureCache[path] = loader.load(path);
+            textureCache[path].encoding = THREE.sRGBEncoding;
+            textureCache[path].anisotropy = Math.min(renderer.capabilities.getMaxAnisotropy(), 4);
         }
+        return textureCache[path];
+    };
 
-        // Add relativistic spiral filaments & turbulence
-        for (let a = 0; a < 60; a++) {
-            const startAngle = Math.random() * Math.PI * 2;
-            const startDist = innerR + Math.random() * 280;
-            ctx.beginPath();
-            ctx.arc(cx, cy, startDist, startAngle, startAngle + 1.2 + Math.random());
-            ctx.strokeStyle = `rgba(226, 232, 240, ${0.15 + Math.random() * 0.25})`;
-            ctx.lineWidth = 1.5 + Math.random() * 2;
-            ctx.stroke();
-        }
+    const dayTexture = loadTexture('images/earth_daymap.jpg');
+    const cloudsTexture = loadTexture('images/earth_clouds.png');
+    const specularTexture = loadTexture('images/earth_specular.jpg');
 
-        const texture = new THREE.CanvasTexture(canvas);
-        texture.wrapS = THREE.ClampToEdgeWrapping;
-        texture.wrapT = THREE.ClampToEdgeWrapping;
-        return texture;
-    }
-
-    const accretionTexture = createAccretionTexture();
-
-    // B. Pitch-Black Event Horizon (The Singularity)
-    const horizonGeom = new THREE.SphereGeometry(1.24, 64, 64);
-    const horizonMat = new THREE.MeshBasicMaterial({
-        color: 0x000000,
-        wireframe: false
-    });
-    const horizonMesh = new THREE.Mesh(horizonGeom, horizonMat);
-    blackHoleGroup.add(horizonMesh);
-
-    // C. Razor-Thin Photon Sphere Edge (Blinding Plasma Ring)
-    const photonGeom = new THREE.RingGeometry(1.25, 1.35, 120);
-    const photonMat = new THREE.MeshBasicMaterial({
-        color: 0xE2E8F0,
-        side: THREE.DoubleSide,
-        transparent: true,
-        opacity: 0.98,
-        blending: THREE.AdditiveBlending
-    });
-    const photonRing = new THREE.Mesh(photonGeom, photonMat);
-    blackHoleGroup.add(photonRing);
-
-    // D. Primary Equatorial Accretion Disk (Swirling Plasma Vortex)
-    const diskGeom = new THREE.RingGeometry(1.35, 4.3, 128, 40);
-    const diskMat = new THREE.MeshBasicMaterial({
-        map: accretionTexture,
-        side: THREE.DoubleSide,
-        transparent: true,
-        opacity: 0.96,
-        blending: THREE.AdditiveBlending,
-        depthWrite: false
-    });
-    const diskMesh = new THREE.Mesh(diskGeom, diskMat);
-    diskMesh.rotation.x = Math.PI / 2.22; // ~81 degrees tilt for canonical Interstellar angle
-    blackHoleGroup.add(diskMesh);
-
-    // E. Gravitational Lensing Halo (The Famous Upper & Lower Einstein Arcs)
-    // General relativity bends the back of the accretion disk over and under the event horizon:
-    const topLensingGeom = new THREE.TorusGeometry(1.78, 0.42, 32, 128, Math.PI);
-    const lensingMat = new THREE.MeshBasicMaterial({
-        color: 0x3B82F6,
-        transparent: true,
-        opacity: 0.88,
-        blending: THREE.AdditiveBlending,
-        depthWrite: false
-    });
-    const topLensingArc = new THREE.Mesh(topLensingGeom, lensingMat);
-    topLensingArc.position.z = -0.06;
-    blackHoleGroup.add(topLensingArc);
-
-    const bottomLensingGeom = new THREE.TorusGeometry(1.78, 0.36, 32, 128, Math.PI);
-    const bottomLensingArc = new THREE.Mesh(bottomLensingGeom, lensingMat);
-    bottomLensingArc.rotation.z = Math.PI;
-    bottomLensingArc.position.z = -0.06;
-    blackHoleGroup.add(bottomLensingArc);
-
-    // Inner Lensing Flare (Platinum-hot light curvature)
-    const innerLensGeom = new THREE.TorusGeometry(1.42, 0.12, 24, 128, Math.PI);
-    const innerLensMat = new THREE.MeshBasicMaterial({
-        color: 0xE2E8F0,
-        transparent: true,
-        opacity: 0.92,
-        blending: THREE.AdditiveBlending,
-        depthWrite: false
-    });
-    const innerLensArc = new THREE.Mesh(innerLensGeom, innerLensMat);
-    innerLensArc.position.z = -0.05;
-    blackHoleGroup.add(innerLensArc);
-
-    const innerLensBottom = new THREE.Mesh(innerLensGeom, innerLensMat);
-    innerLensBottom.rotation.z = Math.PI;
-    innerLensBottom.position.z = -0.05;
-    blackHoleGroup.add(innerLensBottom);
-
-    // F. Relativistic Particle Infall Vortex (1,000 Keplerian Swirling Micro-Photons)
-    const particleCount = 1000;
-    const posArray = new Float32Array(particleCount * 3);
-    const particleData = [];
-
-    for (let i = 0; i < particleCount; i++) {
-        const r = 1.38 + Math.pow(Math.random(), 1.5) * 3.1;
-        const theta = Math.random() * Math.PI * 2;
-        const speed = (0.028 / Math.sqrt(r)) * (0.8 + Math.random() * 0.4);
-        const yOffset = (Math.random() - 0.5) * 0.12 * (r / 2);
-
-        particleData.push({ r, theta, speed, yOffset });
-
-        // Position on tilted disk plane
-        const x = r * Math.cos(theta);
-        const z = r * Math.sin(theta) * Math.cos(Math.PI / 2.22);
-        const y = r * Math.sin(theta) * Math.sin(Math.PI / 2.22) + yOffset;
-
-        posArray[i * 3] = x;
-        posArray[i * 3 + 1] = y;
-        posArray[i * 3 + 2] = z;
-    }
-
-    const partGeom = new THREE.BufferGeometry();
-    partGeom.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
-
-    const partMat = new THREE.PointsMaterial({
-        size: 0.038,
-        color: 0xE2E8F0,
-        transparent: true,
-        opacity: 0.9,
-        blending: THREE.AdditiveBlending,
-        depthWrite: false
-    });
-    const particleVortex = new THREE.Points(partGeom, partMat);
-    blackHoleGroup.add(particleVortex);
-
-    // G. Ambient Starfield Dust (Cosmic Depth)
-    const starCount = 380;
-    const starPosArray = new Float32Array(starCount * 3);
-    for (let i = 0; i < starCount * 3; i += 3) {
-        const rad = 3.5 + Math.random() * 3.0;
+    // A softly lit deep-space backdrop keeps the hero cinematic without another heavy image.
+    const starCount = window.innerWidth < 700 ? 520 : 900;
+    const starPositions = new Float32Array(starCount * 3);
+    const starSizes = new Float32Array(starCount);
+    for (let i = 0; i < starCount; i++) {
+        const radius = 11 + Math.random() * 9;
         const u = Math.random() * Math.PI * 2;
-        const v = Math.acos((Math.random() * 2) - 1);
-        starPosArray[i] = rad * Math.sin(v) * Math.cos(u);
-        starPosArray[i + 1] = rad * Math.sin(v) * Math.sin(u);
-        starPosArray[i + 2] = rad * Math.cos(v);
+        const v = Math.acos(Math.random() * 2 - 1);
+        starPositions[i * 3] = radius * Math.sin(v) * Math.cos(u);
+        starPositions[i * 3 + 1] = radius * Math.sin(v) * Math.sin(u);
+        starPositions[i * 3 + 2] = radius * Math.cos(v) - 2;
+        starSizes[i] = 0.018 + Math.random() * 0.045;
     }
-    const starGeom = new THREE.BufferGeometry();
-    starGeom.setAttribute('position', new THREE.BufferAttribute(starPosArray, 3));
-    const starMat = new THREE.PointsMaterial({
-        size: 0.026,
-        color: 0x93C5FD,
+    const starsGeometry = new THREE.BufferGeometry();
+    starsGeometry.setAttribute('position', new THREE.BufferAttribute(starPositions, 3));
+    starsGeometry.setAttribute('size', new THREE.BufferAttribute(starSizes, 1));
+    const stars = new THREE.Points(starsGeometry, new THREE.ShaderMaterial({
+        uniforms: { uTime: { value: 0 } },
+        vertexShader: `attribute float size; varying float vAlpha; void main(){ vec4 mvPosition=modelViewMatrix*vec4(position,1.0); gl_PointSize=size*(300.0/-mvPosition.z); gl_Position=projectionMatrix*mvPosition; vAlpha=0.45+size*5.0; }`,
+        fragmentShader: `varying float vAlpha; void main(){ float d=distance(gl_PointCoord,vec2(0.5)); if(d>0.5) discard; float glow=1.0-smoothstep(0.05,0.5,d); gl_FragColor=vec4(0.62,0.78,1.0,glow*vAlpha); }`,
         transparent: true,
-        opacity: 0.65
-    });
-    const stars = new THREE.Points(starGeom, starMat);
+        depthWrite: false,
+        blending: THREE.AdditiveBlending
+    }));
     scene.add(stars);
 
-    // H. Cinematic Lighting Setup
-    const ambientLight = new THREE.AmbientLight(0x060B14, 1.5);
+    // Earth surface: real day map, specular ocean response, and a directional sun.
+    const earth = new THREE.Mesh(
+        new THREE.SphereGeometry(1.62, 96, 64),
+        new THREE.MeshPhongMaterial({
+            map: dayTexture,
+            specularMap: specularTexture,
+            specular: new THREE.Color(0x244b73),
+            shininess: 9,
+            color: 0xffffff
+        })
+    );
+    earthGroup.add(earth);
+
+    // Independent cloud shell creates depth and a believable atmospheric movement.
+    const clouds = new THREE.Mesh(
+        new THREE.SphereGeometry(1.645, 72, 48),
+        new THREE.MeshPhongMaterial({
+            map: cloudsTexture,
+            transparent: true,
+            opacity: 0.44,
+            color: 0xb8d9ff,
+            depthWrite: false,
+            blending: THREE.NormalBlending,
+            side: THREE.DoubleSide
+        })
+    );
+    earthGroup.add(clouds);
+
+    // Fresnel-style blue rim: the key visual cue that sells “Earth from space”.
+    const atmosphere = new THREE.Mesh(
+        new THREE.SphereGeometry(1.72, 72, 48),
+        new THREE.ShaderMaterial({
+            uniforms: {
+                glowColor: { value: new THREE.Color(0x3f9dff) },
+                viewVector: { value: camera.position }
+            },
+            vertexShader: `uniform vec3 viewVector; varying float intensity; void main(){ vec3 vNormal=normalize(normalMatrix*normal); vec3 vNormel=normalize(normalMatrix*viewVector); intensity=pow(0.72-dot(vNormal,vNormel),2.4); gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0); }`,
+            fragmentShader: `uniform vec3 glowColor; varying float intensity; void main(){ gl_FragColor=vec4(glowColor,intensity*0.72); }`,
+            side: THREE.BackSide,
+            blending: THREE.AdditiveBlending,
+            transparent: true,
+            depthWrite: false
+        })
+    );
+    earthGroup.add(atmosphere);
+
+    const ambientLight = new THREE.AmbientLight(0x182946, 0.26);
     scene.add(ambientLight);
+    const sunLight = new THREE.DirectionalLight(0xffe7c2, 1.72);
+    sunLight.position.set(-4, 2.4, 5.5);
+    scene.add(sunLight);
+    const rimLight = new THREE.PointLight(0x2e8dff, 1.15, 10);
+    rimLight.position.set(2.7, -0.4, 3.4);
+    scene.add(rimLight);
 
-    const sapphireGlowLight = new THREE.PointLight(0x3B82F6, 4.0, 16);
-    sapphireGlowLight.position.set(0, 0, 1.5);
-    scene.add(sapphireGlowLight);
-
-    const platinumRimLight = new THREE.DirectionalLight(0xE2E8F0, 1.8);
-    platinumRimLight.position.set(4, 3, 5);
-    scene.add(platinumRimLight);
-
-    // I. Anti-Aura-Loss Clamped 3D Physics & Mouse Drag
-    // The user can spin 360° horizontally as fast as they want,
-    // while vertical pitch is safely clamped to preserve the glorious Interstellar aura!
+    const heroEl = document.getElementById('hero');
+    let isHeroVisible = true;
     let mouseX = 0, mouseY = 0;
-    let targetRotY = 0, targetRotX = 0.28;
     let isDragging = false;
     let prevPointerX = 0, prevPointerY = 0;
     let dragVelocityX = 0, dragVelocityY = 0;
-
-    const heroEl = document.getElementById('hero');
 
     window.addEventListener('mousemove', (e) => {
         mouseX = (e.clientX / window.innerWidth) * 2 - 1;
         mouseY = -(e.clientY / window.innerHeight) * 2 + 1;
     }, { passive: true });
 
+    function beginDrag(x, y) {
+        isDragging = true;
+        prevPointerX = x;
+        prevPointerY = y;
+    }
+    function moveDrag(x, y) {
+        if (!isDragging) return;
+        dragVelocityX = (x - prevPointerX) * 0.0045;
+        dragVelocityY = (y - prevPointerY) * 0.0028;
+        earthGroup.rotation.y += dragVelocityX;
+        earthGroup.rotation.x = Math.max(-0.36, Math.min(0.36, earthGroup.rotation.x + dragVelocityY));
+        prevPointerX = x;
+        prevPointerY = y;
+    }
     if (heroEl) {
         heroEl.addEventListener('mousedown', (e) => {
-            if (e.target.closest('a, button')) return;
-            isDragging = true;
-            prevPointerX = e.clientX;
-            prevPointerY = e.clientY;
+            if (!e.target.closest('a, button')) beginDrag(e.clientX, e.clientY);
         });
-
         window.addEventListener('mouseup', () => { isDragging = false; });
-
-        heroEl.addEventListener('mousemove', (e) => {
-            if (!isDragging) return;
-            const deltaX = e.clientX - prevPointerX;
-            const deltaY = e.clientY - prevPointerY;
-            dragVelocityX = deltaX * 0.005;
-            dragVelocityY = deltaY * 0.003;
-
-            blackHoleGroup.rotation.y += dragVelocityX;
-            // Anti-Aura-Loss Clamping: Never let pitch flip over or flatten!
-            blackHoleGroup.rotation.x = Math.max(-0.48, Math.min(0.48, blackHoleGroup.rotation.x + dragVelocityY));
-
-            prevPointerX = e.clientX;
-            prevPointerY = e.clientY;
-        });
-
+        heroEl.addEventListener('mousemove', (e) => moveDrag(e.clientX, e.clientY));
         heroEl.addEventListener('touchstart', (e) => {
-            if (e.target.closest('a, button')) return;
-            if (e.touches.length === 1) {
-                isDragging = true;
-                prevPointerX = e.touches[0].clientX;
-                prevPointerY = e.touches[0].clientY;
-            }
+            if (!e.target.closest('a, button') && e.touches.length === 1) beginDrag(e.touches[0].clientX, e.touches[0].clientY);
         }, { passive: true });
-
         heroEl.addEventListener('touchmove', (e) => {
-            if (!isDragging || e.touches.length !== 1) return;
-            const deltaX = e.touches[0].clientX - prevPointerX;
-            const deltaY = e.touches[0].clientY - prevPointerY;
-            dragVelocityX = deltaX * 0.006;
-            dragVelocityY = deltaY * 0.0035;
-
-            blackHoleGroup.rotation.y += dragVelocityX;
-            blackHoleGroup.rotation.x = Math.max(-0.48, Math.min(0.48, blackHoleGroup.rotation.x + dragVelocityY));
-
-            prevPointerX = e.touches[0].clientX;
-            prevPointerY = e.touches[0].clientY;
+            if (e.touches.length === 1) moveDrag(e.touches[0].clientX, e.touches[0].clientY);
         }, { passive: true });
-
-        heroEl.addEventListener('touchend', () => { isDragging = false; });
+        heroEl.addEventListener('touchend', () => { isDragging = false; }, { passive: true });
+    }
+    if ('IntersectionObserver' in window && heroEl) {
+        const heroObserver = new IntersectionObserver((entries) => { isHeroVisible = entries[0].isIntersecting; }, { threshold: 0.02 });
+        heroObserver.observe(heroEl);
     }
 
-    // Canvas Resize Handler
+    if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+        gsap.registerPlugin(ScrollTrigger);
+        gsap.to(earthGroup.scale, { x: 0.7, y: 0.7, z: 0.7, scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: 1.2 } });
+        gsap.to(earthGroup.position, { y: 0.72, x: 0.72, scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: 1 } });
+    }
+
     window.addEventListener('resize', () => {
         camera.aspect = window.innerWidth / window.innerHeight;
         camera.updateProjectionMatrix();
         renderer.setSize(window.innerWidth, window.innerHeight);
-    });
+    }, { passive: true });
 
-    // High-Performance Visibility Culling (Zero GPU lag when scrolled past hero)
-    let isHeroVisible = true;
-    if ('IntersectionObserver' in window && heroEl) {
-        const heroObserver = new IntersectionObserver((entries) => {
-            isHeroVisible = entries[0].isIntersecting;
-        }, { threshold: 0.02 });
-        heroObserver.observe(heroEl);
-    }
-
-    // GSAP ScrollTrigger Kinematic Gravitational Warping on Scroll
-    if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
-        gsap.registerPlugin(ScrollTrigger);
-
-        gsap.to(blackHoleGroup.scale, {
-            x: 0.65, y: 0.65, z: 0.65,
-            scrollTrigger: {
-                trigger: '#hero',
-                start: 'top top',
-                end: 'bottom top',
-                scrub: 1.2
-            }
-        });
-
-        gsap.to(blackHoleGroup.position, {
-            y: 0.8,
-            scrollTrigger: {
-                trigger: '#hero',
-                start: 'top top',
-                end: 'bottom top',
-                scrub: 1
-            }
-        });
-    }
-
-    // Main 60–120 FPS Relativistic Render Loop
+    // Pause the render loop when the hero is off-screen or the tab is backgrounded.
     let clock = new THREE.Clock();
-
     document.addEventListener('visibilitychange', () => {
-        if (!document.hidden && isHeroVisible) {
-            clock.getDelta(); // Reset clock delta so physics doesn't jump
-        }
+        if (!document.hidden && isHeroVisible) clock.getDelta();
     });
 
     function animate() {
         requestAnimationFrame(animate);
-        // Absolute 0% CPU/GPU overhead when hero is out of view or tab is in background!
         if (!isHeroVisible || document.hidden) return;
-
-        const delta = clock.getDelta();
+        clock.getDelta();
         const time = clock.getElapsedTime();
-
-        // 1. Continuous Relativistic Disk Rotation
-        diskMesh.rotation.z += 0.005;
-
-        // 2. Photon sphere subtle energy breathing
-        const photonPulse = 1 + Math.sin(time * 3.5) * 0.025;
-        photonRing.scale.set(photonPulse, photonPulse, photonPulse);
-
-        // 3. Gravitational Lensing Halo shimmering
-        topLensingArc.scale.y = 1 + Math.sin(time * 2.2) * 0.03;
-        bottomLensingArc.scale.y = 1 + Math.cos(time * 2.2) * 0.03;
-
-        // 4. Keplerian Particle Infall Simulation (v ∝ 1/√r)
-        const positions = particleVortex.geometry.attributes.position.array;
-        for (let i = 0; i < particleCount; i++) {
-            const p = particleData[i];
-            p.theta += p.speed;
-
-            // Inward gravitational pull
-            p.r -= 0.0006;
-            if (p.r < 1.34) {
-                // Respawn at outer edge when swallowed by event horizon
-                p.r = 4.1 + Math.random() * 0.3;
-                p.speed = (0.028 / Math.sqrt(p.r)) * (0.8 + Math.random() * 0.4);
-            }
-
-            const x = p.r * Math.cos(p.theta);
-            const z = p.r * Math.sin(p.theta) * Math.cos(Math.PI / 2.22);
-            const y = p.r * Math.sin(p.theta) * Math.sin(Math.PI / 2.22) + p.yOffset;
-
-            positions[i * 3] = x;
-            positions[i * 3 + 1] = y;
-            positions[i * 3 + 2] = z;
-        }
-        particleVortex.geometry.attributes.position.needsUpdate = true;
-
-        // 5. Starfield slow cosmic drift
-        stars.rotation.y -= 0.0003;
-
-        // 6. Inertia Damping & Subtle Cursor Parallax
+        earth.rotation.y += 0.00115;
+        clouds.rotation.y += 0.00155;
+        stars.rotation.y -= 0.00004;
+        atmosphere.material.uniforms.viewVector.value = camera.position;
+        atmosphere.material.uniforms.glowColor.value.setHSL(0.57 + Math.sin(time * 0.18) * 0.012, 0.82, 0.64);
         if (!isDragging) {
-            dragVelocityX *= 0.95;
-            dragVelocityY *= 0.95;
-            blackHoleGroup.rotation.y += dragVelocityX + 0.0015; // Natural slow galactic spin
-            blackHoleGroup.rotation.x = Math.max(-0.48, Math.min(0.48, blackHoleGroup.rotation.x + dragVelocityY));
-
-            // Parallax tracking with gentle spring
-            const targetX = 0.28 - mouseY * 0.12;
-            const targetY = mouseX * 0.15;
-            blackHoleGroup.rotation.x += (targetX - blackHoleGroup.rotation.x) * 0.02;
+            dragVelocityX *= 0.94;
+            dragVelocityY *= 0.94;
+            earthGroup.rotation.y += dragVelocityX;
+            earthGroup.rotation.x += dragVelocityY;
+            const targetX = 0.08 - mouseY * 0.06;
+            const targetY = -0.48 + mouseX * 0.08;
+            earthGroup.rotation.x += (targetX - earthGroup.rotation.x) * 0.018;
+            earthGroup.rotation.y += (targetY - earthGroup.rotation.y) * 0.018;
         }
-
         renderer.render(scene, camera);
     }
     animate();
